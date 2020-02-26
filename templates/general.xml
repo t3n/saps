@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+ <phone-settings>
+  <language perm="">Deutsch</language>
+  <timezone perm="">GER+1</timezone>
+  <tone_scheme perm="">GER</tone_scheme>
+  <http_user perm="">admin</http_user>
+  <http_pass perm="">0000</http_pass>
+  <date_us_format perm="RW">off</date_us_format>
+  <web_language perm="RW">Deutsch</web_language>
+
+  <!-- the following parameters are only required to provide automated firmware updates--> 
+  <!-- IMPORTANT: define the URL of the firmware setting file--> 
+  <firmware_status perm="R">http://{{ server }}/{{ phone_type }}/firmware.xml</firmware_status>
+  <update_policy perm="R">auto_update</update_policy>
+  <firmware_interval perm="R">2880 </firmware_interval>
+
+ </phone-settings>
+</settings>

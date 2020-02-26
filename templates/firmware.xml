@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <firmware-settings>
+  <firmware perm="">http://{{ server }}/firmware/{{ phone }}-8.7.5.35-SIP-f.bin</firmware>
+ </firmware-settings>
