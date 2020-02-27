@@ -7,9 +7,6 @@ env = environ.Env(
 )
 environ.Env.read_env()
 
-SIPGATE_CLIENT_ID = env('SIPGATE_CLIENT_ID')
-SIPGATE_CLIENT_SECRET = env('SIPGATE_CLIENT_SECRET')
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -21,6 +18,12 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
+AUTHLIB_OAUTH_CLIENTS = {
+    'sipgate': {
+        'client_id': env('SIPGATE_CLIENT_ID'),
+        'client_secret': env('SIPGATE_CLIENT_SECRET')
+    }
+}
 
 # Application definition
 
@@ -110,9 +113,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
