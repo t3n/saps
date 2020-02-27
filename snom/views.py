@@ -1,4 +1,4 @@
-from django.http import HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
 from .models import Phone
@@ -44,6 +44,10 @@ def general(request, phone_type):
         'server': '192.168.23.144',
         'phone_type': phone_type,
     }
+
+    if not phone_type_valid(phone_type):
+        return HttpResponseBadRequest("Phone type not valid")
+
     return render(request, 'general.xml', context, 'application/xml')
 
 
@@ -57,6 +61,10 @@ def specific(request, phone_type, mac_address):
         'user_uid': 'test',
         'user_outbound': 'test',
     }
+
+    if not Phone.objects.filter(mac_address=mac_address):
+        raise Http404("Phone not found")
+
     return render(request, 'specific.xml', context, 'application/xml')
 
 
@@ -65,4 +73,8 @@ def firmware(request, phone_type):
         'server': '192.168.23.144',
         'phone_type': phone_type,
     }
+
+    if not phone_type_valid(phone_type):
+        return HttpResponseBadRequest("Phone type not valid")
+
     return render(request, 'firmware.xml', context, 'application/xml')
