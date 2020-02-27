@@ -1,5 +1,6 @@
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
+from django.contrib.sites.shortcuts import get_current_site
 
 from .models import Phone
 from .utils import mac_address_valid, phone_type_valid
@@ -7,7 +8,7 @@ from .utils import mac_address_valid, phone_type_valid
 
 def phone_type(request, phone_type):
     context = {
-        'server': '192.168.23.144',
+        'server': get_current_site(request).domain,
         'phone_type': phone_type,
     }
 
@@ -19,8 +20,9 @@ def phone_type(request, phone_type):
 
 def phone(request, phone_type, mac_address):
     context = {
-        'server': '192.168.23.144',
-        'mac': mac_address,
+        'server': get_current_site(request).domain,
+        'phone_type': phone_type,
+        'mac_address': mac_address,
     }
 
     if not phone_type_valid(phone_type):
@@ -41,7 +43,7 @@ def phone(request, phone_type, mac_address):
 
 def general(request, phone_type):
     context = {
-        'server': '192.168.23.144',
+        'server': get_current_site(request).domain,
         'phone_type': phone_type,
     }
 
@@ -53,7 +55,7 @@ def general(request, phone_type):
 
 def specific(request, phone_type, mac_address):
     context = {
-        'server': '192.168.23.144',
+        'server': get_current_site(request).domain,
         'user_realname': 'test',
         'user_name': 'test',
         'user_host': 'test',
@@ -70,7 +72,7 @@ def specific(request, phone_type, mac_address):
 
 def firmware(request, phone_type):
     context = {
-        'server': '192.168.23.144',
+        'server': get_current_site(request).domain,
         'phone_type': phone_type,
     }
 

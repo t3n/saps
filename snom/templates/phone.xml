@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
  <setting-files>
-  <file url="http://{{ server }}/specific/{{ mac }}.xml" />
+  <file url="http://{{ server }}{% url 'specific' phone_type mac_address %}" />
  </setting-files>

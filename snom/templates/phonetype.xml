@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
  <setting-files>
-  <file url="http://{{ server }}/{{ phone_type }}/general.xml" />
+  <file url="http://{{ server }}{% url 'general' phone_type %}" />
   <file url="http://{{ server }}/lang/web_lang_DE.xml" />
   <file url="http://{{ server }}/lang/gui_lang_DE.xml" />
  </setting-files>
