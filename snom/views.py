@@ -16,9 +16,21 @@ def phone(request, phone_type, mac_address):
         'server': '192.168.23.144',
         'mac': mac_address,
     }
-    phone = Phone(phone_type=phone_type, mac_address=mac_address)
-    phone.save()
-    return render(request, 'phone.xml', context)
+
+    if not phone_type_valid(phone_type):
+        return HttpResponseBadRequest("Phone type not valid")
+
+    if not mac_address_valid(mac_address):
+        return HttpResponseBadRequest("MAC address not valid")
+
+    phone = Phone.objects.filter(mac_address=mac_address)
+    status = 200
+    if not phone:
+        phone = Phone(phone_type=phone_type, mac_address=mac_address)
+        phone.save()
+        status = 201
+
+    return render(request, 'phone.xml', context, status=status)
 
 
 def general(request, phone_type):
