@@ -1,6 +1,8 @@
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
 from .models import Phone
+from .utils import mac_address_valid, phone_type_valid
 
 
 def phone_type(request, phone_type):
@@ -8,6 +10,10 @@ def phone_type(request, phone_type):
         'server': '192.168.23.144',
         'phone_type': phone_type,
     }
+
+    if not phone_type_valid(phone_type):
+        return HttpResponseBadRequest("Phone type not valid")
+
     return render(request, 'phonetype.xml', context)
 
 
