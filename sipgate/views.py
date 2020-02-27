@@ -59,6 +59,7 @@ def authorize(request):
     user = User.objects.filter(email=userdata['email']).first()
     if not user:
         user = User.objects.create_user(
+            username=userdata['email'],
             email=userdata['email'],
             first_name=userdata['firstname'],
             last_name=userdata['lastname'],
