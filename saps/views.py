@@ -8,19 +8,19 @@ from .models import Phone, OAuth2Token
 
 
 def fetch_token(name, request):
-
-    token = OAuth2Token.objects.filter(
+    token = OAuth2Token.objects.get(
         name=name,
         user=request.user
-    ).first()
+    )
+
     return token.to_token()
 
 
 def update_token(name, token, refresh_token=None, access_token=None):
     if refresh_token:
-        item = OAuth2Token.find(name=name, refresh_token=refresh_token)
+        item = OAuth2Token.objects.get(name=name, refresh_token=refresh_token)
     elif access_token:
-        item = OAuth2Token.find(name=name, access_token=access_token)
+        item = OAuth2Token.objects.get(name=name, access_token=access_token)
     else:
         return
 
@@ -71,6 +71,7 @@ def authorize(request):
             name='sipgate',
             token_type=token['token_type'],
             access_token=token['access_token'],
+            refresh_token=token['refresh_token'],
             expires_at=token['expires_at'],
             user=user,
         )
@@ -84,10 +85,8 @@ def authorize(request):
 
 
 def me(request):
-    token = fetch_token('sipgate', request)
-
-    userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', token=token).json()
-    userdata = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + userinfo['sub'], token=token).json()
+    userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', request=request).json()
+    userdata = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + userinfo['sub'], request=request).json()
 
     response = HttpResponse()
     response.write('<h1>Hello ' + userdata['email'] + '</h1>')

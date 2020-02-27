@@ -1,3 +1,4 @@
+import time
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -29,6 +30,13 @@ class OAuth2Token(models.Model):
     refresh_token = models.CharField(max_length=200)
     expires_at = models.PositiveIntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'OAuth2Token'
+        verbose_name_plural = 'OAuth2Tokens'
+
+    def __str__(self):
+        return self.user.email + '-' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.expires_at))
 
     def to_token(self):
         return dict(
