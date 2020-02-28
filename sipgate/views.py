@@ -6,6 +6,7 @@ from authlib.integrations.django_client import OAuth
 from django.shortcuts import render
 from .forms import ContactForm
 from .models import OAuth2Token
+from snom.models import Phone
 
 
 def fetch_token(name, request):
@@ -51,15 +52,16 @@ def assign(request):
     foo_list = []
     for name in users['items']:
         #ids = name['id']
-        foo_list.append((name['id'], name['firstname'] + " " + name['lastname']))
+        foo_list.append((name['id'], name['firstname'] + " " + name['lastname']),)
+        
         
     if request.method == 'POST':
-        form = ContactForm(request.POST)
+        form = ContactForm(request.POST, choices=foo_list)
         if form.is_valid():
-            print(form.cleaned_data['name'])
+            print(form.cleaned_data['user'])
+            #send form somewhere
     else:
-        form = ContactForm(foo_list)
-    print(foo_list)
+        form = ContactForm(choices=foo_list)
     return render(request, 'assign.html', {'form': form})
 
 
