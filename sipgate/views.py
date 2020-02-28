@@ -3,7 +3,8 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import reverse
 from django.contrib.auth.models import User
 from authlib.integrations.django_client import OAuth
-
+from django.shortcuts import render
+from .forms import ContactForm
 from .models import OAuth2Token
 
 
@@ -45,6 +46,22 @@ def home(request):
     login_uri = reverse('login')
     return HttpResponse(f'<a href="{login_uri}">Login with Sipgate</a>')
 
+def assign(request):
+    users = oauth.sipgate.get('https://api.sipgate.com/v2/app/users/', request=request).json()
+    foo_list = []
+    for name in users['items']:
+        #ids = name['id']
+        foo_list.append((name['id'], name['firstname'] + " " + name['lastname']))
+        
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data['name'])
+    else:
+        form = ContactForm(foo_list)
+    print(foo_list)
+    return render(request, 'assign.html', {'form': form})
+
 
 def login(request):
     redirect_uri = request.build_absolute_uri(reverse('authorize'))
@@ -83,7 +100,6 @@ def authorize(request):
     auth_login(request, user)
 
     return response
-
 
 def me(request):
     userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', request=request).json()
