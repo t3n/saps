@@ -1,9 +1,12 @@
 from django import forms
+from snom.models import Phone
+from django.db import models
 
-class ContactForm(forms.Form):
+class AssignForm(forms.Form):
     def __init__(self, *args, **kwargs):
         choices = kwargs.pop("choices")
-        super(ContactForm, self).__init__(*args, **kwargs)
+        super(AssignForm, self).__init__(*args, **kwargs)
         self.fields['user'].choices = choices
 
+    phones = forms.ModelChoiceField(queryset=Phone.objects.all())
     user = forms.ChoiceField(choices=())

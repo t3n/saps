@@ -4,9 +4,10 @@ from django.shortcuts import reverse
 from django.contrib.auth.models import User
 from authlib.integrations.django_client import OAuth
 from django.shortcuts import render
-from .forms import ContactForm
+from .forms import AssignForm
 from .models import OAuth2Token
 from snom.models import Phone
+from snom.views import specific
 
 
 def fetch_token(name, request):
@@ -47,22 +48,29 @@ def home(request):
     login_uri = reverse('login')
     return HttpResponse(f'<a href="{login_uri}">Login with Sipgate</a>')
 
+def get_credentials(request, user_id):
+    credentials = oauth.sipgate.get('https://api.sipgate.com/v2/' + user_id + "/devices", request=request).json()
+    print(credentials)
+    username = credentials['items'][0]['credentials']['username']
+    password = credentials['items'][0]['credentials']['password']
+
+    return username, password
+
 def assign(request):
     users = oauth.sipgate.get('https://api.sipgate.com/v2/app/users/', request=request).json()
     foo_list = []
+
     for name in users['items']:
-        #ids = name['id']
         foo_list.append((name['id'], name['firstname'] + " " + name['lastname']),)
         
-        
     if request.method == 'POST':
-        form = ContactForm(request.POST, choices=foo_list)
+        form = AssignForm(request.POST, choices=foo_list)
         if form.is_valid():
-            print(form.cleaned_data['user'])
-            #send form somewhere
+            username, password = get_credentials(request, form.cleaned_data['user'])
+            Phone.objects.filter(pk=form.cleaned_data['phones'].id).update(username=username, password=password)
     else:
-        form = ContactForm(choices=foo_list)
-    return render(request, 'assign.html', {'form': form})
+        form = AssignForm(choices=foo_list)
+    return render(request, 'assign.html', {'form':form})
 
 
 def login(request):
