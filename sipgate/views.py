@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.contrib.auth import login as auth_login
-from django.shortcuts import reverse
+from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.models import User
 from authlib.integrations.django_client import OAuth
-from django.shortcuts import render
+
 from .forms import AssignForm
 from .models import OAuth2Token
 from snom.models import Phone
@@ -68,6 +68,7 @@ def assign(request):
                 realname=credentials['alias'],
                 host=credentials['credentials']['sipServer']
             )
+        return redirect('assign')
     else:
         form = AssignForm(choices=users)
     return render(request, 'assign.html', {'form': form})
