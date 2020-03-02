@@ -7,7 +7,6 @@ from django.shortcuts import render
 from .forms import AssignForm
 from .models import OAuth2Token
 from snom.models import Phone
-from snom.views import specific
 
 
 def fetch_token(name, request):
@@ -48,13 +47,14 @@ def home(request):
     login_uri = reverse('login')
     return HttpResponse(f'<a href="{login_uri}">Login with Sipgate</a>')
 
+
 def get_credentials(request, user_id):
     credentials = oauth.sipgate.get('https://api.sipgate.com/v2/' + user_id + "/devices", request=request).json()
-    print(credentials)
     username = credentials['items'][0]['credentials']['username']
     password = credentials['items'][0]['credentials']['password']
 
     return username, password
+
 
 def assign(request):
     users = oauth.sipgate.get('https://api.sipgate.com/v2/app/users/', request=request).json()
@@ -62,7 +62,7 @@ def assign(request):
 
     for name in users['items']:
         foo_list.append((name['id'], name['firstname'] + " " + name['lastname']),)
-        
+
     if request.method == 'POST':
         form = AssignForm(request.POST, choices=foo_list)
         if form.is_valid():
@@ -70,7 +70,7 @@ def assign(request):
             Phone.objects.filter(pk=form.cleaned_data['phones'].id).update(username=username, password=password)
     else:
         form = AssignForm(choices=foo_list)
-    return render(request, 'assign.html', {'form':form})
+    return render(request, 'assign.html', {'form': form})
 
 
 def login(request):
@@ -110,6 +110,7 @@ def authorize(request):
     auth_login(request, user)
 
     return response
+
 
 def me(request):
     userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', request=request).json()

@@ -61,7 +61,6 @@ def specific(request, phone_type, mac_address):
         'user_host': 'test',
         'user_pname': 'test',
         'user_uid': 'test',
-        'user_outbound': 'test',
     }
 
     if not Phone.objects.filter(mac_address=mac_address):
