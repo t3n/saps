@@ -49,37 +49,27 @@ def home(request):
 
 
 def get_credentials(request, user_id):
-    credentials = oauth.sipgate.get('https://api.sipgate.com/v2/' + user_id + "/devices", request=request).json()
-    username = credentials['items'][0]['credentials']['username']
-    password = credentials['items'][0]['credentials']['password']
-
-    return username, password
+    return oauth.sipgate.get('https://api.sipgate.com/v2/' + user_id + "/devices", request=request).json()['items'][0]
 
 
 def assign(request):
-    users = oauth.sipgate.get('https://api.sipgate.com/v2/app/users/', request=request).json()
-    userList = []
+    users = []
 
-    for name in users['items']:
-        userList.append((name['id'], name['firstname'] + " " + name['lastname']),)
+    for user in oauth.sipgate.get('https://api.sipgate.com/v2/app/users/', request=request).json()['items']:
+        users.append((user['id'], user['firstname'] + " " + user['lastname']),)
 
     if request.method == 'POST':
-        form = AssignForm(request.POST, choices=userList)
+        form = AssignForm(request.POST, choices=users)
         if form.is_valid():
-            singleUser = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + form.cleaned_data['user'], request=request).json()
-            userSpecific = oauth.sipgate.get('https://api.sipgate.com/v2/' + form.cleaned_data['user'] + "/devices", request=request).json()
-            userId = form.cleaned_data['user']
-            lineId = userSpecific['items'][0]['activePhonelines'][0]['id']
-            phoneLine = oauth.sipgate.get('https://api.sipgate.com/v2/' + userId + "/" + "phonelines/" + lineId + "/numbers", request=request).json()
-
-            internalNumber = phoneLine['items'][1]['number']
-            lastName = singleUser['lastname']
-            realname = internalNumber + " " + lastName
-
-            username, password = get_credentials(request, form.cleaned_data['user'])
-            Phone.objects.filter(pk=form.cleaned_data['phones'].id).update(username=username, password=password, pname=username, realname=realname)
+            credentials = get_credentials(request, form.cleaned_data['user'])
+            Phone.objects.filter(pk=form.cleaned_data['phones'].id).update(
+                username=credentials['credentials']['username'],
+                password=credentials['credentials']['password'],
+                realname=credentials['alias'],
+                host=credentials['credentials']['sipServer']
+            )
     else:
-        form = AssignForm(choices=userList)
+        form = AssignForm(choices=users)
     return render(request, 'assign.html', {'form': form})
 
 
