@@ -54,13 +54,16 @@ def general(request, phone_type):
 
 
 def specific(request, phone_type, mac_address):
+    e = Phone.objects.get(mac_address=mac_address)
+
     context = {
         'server': get_current_site(request).domain,
-        'user_realname': 'test',
-        'user_name': 'test',
-        'user_host': 'test',
-        'user_pname': 'test',
-        'user_uid': 'test',
+        'user_realname': e.realname,
+        'user_name': e.username,
+        'user_host': e.host,
+        'user_pname': e.pname,
+        'user_uid': e.uid,
+        'user_pass': e.password,
     }
 
     if not Phone.objects.filter(mac_address=mac_address):
