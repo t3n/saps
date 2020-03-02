@@ -1,5 +1,5 @@
-from django.http import Http404, HttpResponseBadRequest
-from django.shortcuts import render
+from django.http import HttpResponseBadRequest
+from django.shortcuts import render, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 
 from .models import Phone
@@ -54,18 +54,15 @@ def general(request, phone_type):
 
 
 def specific(request, phone_type, mac_address):
-    e = Phone.objects.get(mac_address=mac_address)
+    phone = get_object_or_404(Phone, mac_address=mac_address)
 
     context = {
         'server': get_current_site(request).domain,
-        'user_realname': e.realname,
-        'user_name': e.username,
-        'user_host': e.host,
-        'user_pass': e.password,
+        'user_realname': phone.realname,
+        'user_name': phone.username,
+        'user_host': phone.host,
+        'user_pass': phone.password,
     }
-
-    if not Phone.objects.filter(mac_address=mac_address):
-        raise Http404("Phone not found")
 
     return render(request, 'specific.xml', context, 'application/xml')
 
