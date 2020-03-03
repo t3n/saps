@@ -2,7 +2,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 
-from .models import Phone
+from .models import Phone, Firmware
 from .utils import mac_address_valid, phone_type_valid
 
 
@@ -68,9 +68,11 @@ def specific(request, phone_type, mac_address):
 
 
 def firmware(request, phone_type):
+    firmware = get_object_or_404(Firmware, phone_type__phone_type=phone_type)
     context = {
         'server': get_current_site(request).domain,
         'phone_type': phone_type,
+        'firmware': firmware.firmware
     }
 
     if not phone_type_valid(phone_type):
