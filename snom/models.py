@@ -23,6 +23,6 @@ class Firmware(models.Model):
 
 class PhoneType(models.Model):
     phone_type = models.CharField(max_length=12)
-    
+
     def __str__(self):
         return self.phone_type

@@ -68,14 +68,14 @@ def specific(request, phone_type, mac_address):
 
 
 def firmware(request, phone_type):
+    if not phone_type_valid(phone_type):
+        return HttpResponseBadRequest("Phone type not valid")
+
     firmware = get_object_or_404(Firmware, phone_type__phone_type=phone_type)
     context = {
         'server': get_current_site(request).domain,
         'phone_type': phone_type,
         'firmware': firmware.firmware
     }
-
-    if not phone_type_valid(phone_type):
-        return HttpResponseBadRequest("Phone type not valid")
 
     return render(request, 'firmware.xml', context, 'application/xml')

@@ -2,7 +2,9 @@ from django.http import HttpResponse
 from django.contrib.auth import login as auth_login
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from authlib.integrations.django_client import OAuth
+from authlib.common.errors import AuthlibBaseError
 
 from .forms import AssignForm
 from .models import OAuth2Token
@@ -80,7 +82,10 @@ def login(request):
 
 
 def authorize(request):
-    token = oauth.sipgate.authorize_access_token(request)
+    try:
+        token = oauth.sipgate.authorize_access_token(request)
+    except AuthlibBaseError:
+        return redirect('login')
     userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', token=token).json()
     userdata = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + userinfo['sub'], token=token).json()
 
@@ -114,7 +119,10 @@ def authorize(request):
 
 
 def me(request):
-    userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', request=request).json()
+    try:
+        userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', request=request).json()
+    except (ObjectDoesNotExist, TypeError):
+        return redirect('login')
     userdata = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + userinfo['sub'], request=request).json()
 
     response = HttpResponse()
