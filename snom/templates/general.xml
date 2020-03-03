@@ -8,12 +8,28 @@
   <http_pass perm="">0000</http_pass>
   <date_us_format perm="RW">off</date_us_format>
   <web_language perm="RW">Deutsch</web_language>
+  <ignore_security_warning perm="">on</ignore_security_warning>
+  <dkey_record perm="R">dtmf *6</dkey_record>
+  <dkey_retrieve perm="">speed 55000</dkey_retrieve>
+  <dkey_redial perm="">keyevent F_REDIAL</dkey_redial>
+  <dkey_directory perm="">keyevent F_ADR_BOOK</dkey_directory>
+  <dkey_menu perm="">keyevent F_SETTINGS</dkey_menu>
+  <dkey_conf perm="">dtmf *5</dkey_conf>
+  <dkey_hold perm="">dtmf *3</dkey_hold>
+  <dkey_settings perm="">keyevent F_SETTINGS</dkey_settings>
+  <dkey_help perm="">keyevent F_SUPPORT</dkey_help>
+  <dkey_snom perm="">keyevent none</dkey_snom>
+  <dkey_transfer perm="">dtmf #</dkey_transfer>
+  <dkey_dnd perm="">keyevent F_DND</dkey_dnd>
+  <gui_fkey1 perm="">keyevent F_REDIRECT</gui_fkey1>
+  <gui_fkey2 perm="">keyevent F_CALL_LIST</gui_fkey2>
+  <gui_fkey3 perm="">keyevent F_ADR_BOOK</gui_fkey3>
+  <gui_fkey4 perm="">keyevent F_RETRIEVE</gui_fkey4>
 
   <!-- the following parameters are only required to provide automated firmware updates--> 
   <!-- IMPORTANT: define the URL of the firmware setting file--> 
   <firmware_status perm="R">http://{{ server }}{% url 'firmware' phone_type %}</firmware_status>
   <update_policy perm="R">auto_update</update_policy>
   <firmware_interval perm="R">2880 </firmware_interval>
-
  </phone-settings>
 </settings>
