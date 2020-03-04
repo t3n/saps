@@ -1,0 +1,84 @@
+- model: snom.phonetype
+  pk: 1
+  fields:
+    phone_type: snom300
+
+- model: snom.phonetype
+  pk: 2
+  fields:
+    phone_type: snom320
+
+- model: snom.phonetype
+  pk: 3
+  fields:
+    phone_type: snom360
+
+- model: snom.phonetype
+  pk: 4
+  fields:
+    phone_type: snom370
+
+- model: snom.phonetype
+  pk: 5
+  fields:
+    phone_type: snomD305
+
+- model: snom.phonetype
+  pk: 6
+  fields:
+    phone_type: snomD315
+
+- model: snom.phonetype
+  pk: 7
+  fields:
+    phone_type: snomD345
+
+- model: snom.phonetype
+  pk: 8
+  fields:
+    phone_type: snomD375
+
+- model: snom.phonetype
+  pk: 9
+  fields:
+    phone_type: snomD385
+
+- model: snom.phonetype
+  pk: 10
+  fields:
+    phone_type: snomD712
+
+- model: snom.phonetype
+  pk: 11
+  fields:
+    phone_type: snomD715
+
+- model: snom.phonetype
+  pk: 12
+  fields:
+    phone_type: snomD725
+
+- model: snom.phonetype
+  pk: 13
+  fields:
+    phone_type: snomD745
+
+- model: snom.phonetype
+  pk: 14
+  fields:
+    phone_type: snomD717
+
+- model: snom.phonetype
+  pk: 15
+  fields:
+    phone_type: snomD735
+
+- model: snom.phonetype
+  pk: 16
+  fields:
+    phone_type: snomD765
+
+- model: snom.phonetype
+  pk: 17
+  fields:
+    phone_type: snomD785
