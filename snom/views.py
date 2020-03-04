@@ -2,7 +2,12 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 
-from .models import Phone, PhoneType, Firmware, Language
+from .models import (
+    Firmware,
+    Language,
+    Phone,
+    PhoneType,
+)
 from .utils import mac_address_valid, phone_type_valid
 
 
