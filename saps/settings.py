@@ -7,7 +7,6 @@ env = environ.Env(
 )
 environ.Env.read_env()
 
-
 FIXTURE_DIRS = (
     os.path.join(BASE_DIR, '/saps/fixtures'),
 )
