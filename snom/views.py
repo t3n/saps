@@ -73,9 +73,7 @@ def firmware(request, phone_type):
 
     firmware = get_object_or_404(Firmware, phone_type__phone_type=phone_type)
     context = {
-        'server': get_current_site(request).domain,
-        'phone_type': phone_type,
-        'firmware': firmware.firmware
+        'firmware': firmware.host + firmware.path + firmware.filename
     }
 
     return render(request, 'firmware.xml', context, 'application/xml')

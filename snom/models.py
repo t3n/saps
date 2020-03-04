@@ -20,7 +20,7 @@ class Firmware(models.Model):
     filename = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.path + self.path + self.filename
+        return self.host + self.path + self.filename
 
 
 class Language(models.Model):
@@ -30,7 +30,7 @@ class Language(models.Model):
     filename = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.path + self.path + self.filename
+        return self.host + self.path + self.filename
 
 
 class PhoneType(models.Model):
