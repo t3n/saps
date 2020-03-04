@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
  <phone-settings>
-  <setting_server perm="RW">http://provisioning.snom.com/snomD320/snomD320.php?mac={mac}</setting_server>
+  <setting_server perm="RW">{{ language }}</setting_server>
   <language perm="">Deutsch</language>
   <timezone perm="">GER+1</timezone>
   <tone_scheme perm="">GER</tone_scheme>
