@@ -7,6 +7,9 @@ env = environ.Env(
 )
 environ.Env.read_env()
 
+FIXTURE_DIRS = (
+    os.path.join(BASE_DIR, '/saps/fixtures'),
+)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
