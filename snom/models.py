@@ -15,10 +15,22 @@ class Phone(models.Model):
 
 class Firmware(models.Model):
     phone_type = models.ForeignKey('PhoneType', on_delete=models.CASCADE)
-    firmware = models.CharField(max_length=200)
+    host = models.CharField(max_length=200)
+    path = models.CharField(max_length=200)
+    filename = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.firmware
+        return self.path + self.path + self.filename
+
+
+class Language(models.Model):
+    phone_type = models.ForeignKey('PhoneType', on_delete=models.CASCADE)
+    host = models.CharField(max_length=200)
+    path = models.CharField(max_length=200)
+    filename = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.path + self.path + self.filename
 
 
 class PhoneType(models.Model):

@@ -1,8 +1,14 @@
 from django.contrib import admin
 
-from .models import Firmware, Phone, PhoneType
+from .models import (
+    Firmware,
+    Language,
+    Phone,
+    PhoneType,
+)
 
 
 admin.site.register(Firmware)
+admin.site.register(Language)
 admin.site.register(Phone)
 admin.site.register(PhoneType)
