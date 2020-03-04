@@ -2,7 +2,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 
-from .models import Phone, Firmware
+from .models import Phone, PhoneType, Firmware
 from .utils import mac_address_valid, phone_type_valid
 
 
@@ -34,7 +34,7 @@ def phone(request, phone_type, mac_address):
     phone = Phone.objects.filter(mac_address=mac_address)
     status = 200
     if not phone:
-        phone = Phone(phone_type=phone_type, mac_address=mac_address)
+        phone = Phone(phone_type=PhoneType.objects.get(phone_type=phone_type), mac_address=mac_address)
         phone.save()
         status = 201
 

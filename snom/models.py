@@ -15,10 +15,10 @@ class Phone(models.Model):
 
 class Firmware(models.Model):
     phone_type = models.ForeignKey('PhoneType', on_delete=models.CASCADE)
-    firmware = models.CharField(max_length=25)
+    firmware = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.phone_type.phone_type + '-' + self.firmware
+        return self.firmware
 
 
 class PhoneType(models.Model):
