@@ -1,16 +1,10 @@
 import re
+from .models import PhoneType
 
 
 def phone_type_valid(phone_type):
-    phone_types = [
-        'snom300',
-        'snom320',
-        'snom360',
-        'snom370',
-    ]
-
-    for p in phone_types:
-        if p == phone_type:
+    for p in PhoneType.objects.all():
+        if p.phone_type == phone_type:
             return True
 
     return False

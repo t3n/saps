@@ -1,10 +1,14 @@
 from django.http import HttpResponse
 from django.contrib.auth import login as auth_login
-from django.shortcuts import reverse
+from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from authlib.integrations.django_client import OAuth
+from authlib.common.errors import AuthlibBaseError
 
+from .forms import AssignForm
 from .models import OAuth2Token
+from snom.models import Phone
 
 
 def fetch_token(name, request):
@@ -46,13 +50,42 @@ def home(request):
     return HttpResponse(f'<a href="{login_uri}">Login with Sipgate</a>')
 
 
+def get_credentials(request, user_id):
+    return oauth.sipgate.get('https://api.sipgate.com/v2/' + user_id + "/devices", request=request).json()['items'][0]
+
+
+def assign(request):
+    users = []
+
+    for user in oauth.sipgate.get('https://api.sipgate.com/v2/app/users/', request=request).json()['items']:
+        users.append((user['id'], user['firstname'] + " " + user['lastname']),)
+
+    if request.method == 'POST':
+        form = AssignForm(request.POST, choices=users)
+        if form.is_valid():
+            credentials = get_credentials(request, form.cleaned_data['user'])
+            Phone.objects.filter(pk=form.cleaned_data['phones'].id).update(
+                username=credentials['credentials']['username'],
+                password=credentials['credentials']['password'],
+                realname=credentials['alias'],
+                host=credentials['credentials']['sipServer']
+            )
+        return redirect('assign')
+    else:
+        form = AssignForm(choices=users)
+    return render(request, 'assign.html', {'form': form})
+
+
 def login(request):
     redirect_uri = request.build_absolute_uri(reverse('authorize'))
     return oauth.sipgate.authorize_redirect(request, redirect_uri)
 
 
 def authorize(request):
-    token = oauth.sipgate.authorize_access_token(request)
+    try:
+        token = oauth.sipgate.authorize_access_token(request)
+    except AuthlibBaseError:
+        return redirect('login')
     userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', token=token).json()
     userdata = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + userinfo['sub'], token=token).json()
 
@@ -86,7 +119,10 @@ def authorize(request):
 
 
 def me(request):
-    userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', request=request).json()
+    try:
+        userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', request=request).json()
+    except (ObjectDoesNotExist, TypeError):
+        return redirect('login')
     userdata = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + userinfo['sub'], request=request).json()
 
     response = HttpResponse()

@@ -4,10 +4,9 @@
   <user_realname idx="1" perm="">{{ user_realname }}</user_realname>
   <user_name idx="1" perm="">{{ user_name }}</user_name>
   <user_host idx="1" perm="">{{ user_host }}</user_host>
-  <user_pname idx="1" perm="">{{ user_pname }}</user_pname>
+  <user_pname idx="1" perm="">{{ user_name }}</user_pname>
   <user_pass idx="1" perm="">{{ user_pass }}</user_pass>
-  <user_uid idx="1" perm="">{{ user_uid }}</user_uid>
-  <user_outbound idx="1" perm="">{{ user_outbound }}</user_outbound>
+  <user_outbound idx="1" perm="">{{ user_host }}</user_outbound>
   <user_was_registered idx="1" perm="">true</user_was_registered>
  </phone-settings>
 </settings>
