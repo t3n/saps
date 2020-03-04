@@ -2,7 +2,12 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 
-from .models import Phone, PhoneType, Firmware
+from .models import (
+    Firmware,
+    Language,
+    Phone,
+    PhoneType,
+)
 from .utils import mac_address_valid, phone_type_valid
 
 
@@ -42,9 +47,12 @@ def phone(request, phone_type, mac_address):
 
 
 def general(request, phone_type):
+    language = get_object_or_404(Language, phone_type__phone_type=phone_type)
+
     context = {
         'server': get_current_site(request).domain,
         'phone_type': phone_type,
+        'language': language.host + language.path + language.filename,
     }
 
     if not phone_type_valid(phone_type):
@@ -73,9 +81,7 @@ def firmware(request, phone_type):
 
     firmware = get_object_or_404(Firmware, phone_type__phone_type=phone_type)
     context = {
-        'server': get_current_site(request).domain,
-        'phone_type': phone_type,
-        'firmware': firmware.firmware
+        'firmware': firmware.host + firmware.path + firmware.filename
     }
 
     return render(request, 'firmware.xml', context, 'application/xml')
