@@ -1,6 +1,7 @@
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import ObjectDoesNotExist
 
 from .models import (
     Firmware,
@@ -47,12 +48,15 @@ def phone(request, phone_type, mac_address):
 
 
 def general(request, phone_type):
-    language = get_object_or_404(Language, phone_type__phone_type=phone_type)
+    try:
+        language = Language.objects.get(phone_type__phone_type=phone_type)
+    except ObjectDoesNotExist:
+        language = None
 
     context = {
         'server': get_current_site(request).domain,
         'phone_type': phone_type,
-        'language': language.host + language.path + language.filename,
+        'language': language,
     }
 
     if not phone_type_valid(phone_type):
@@ -81,7 +85,7 @@ def firmware(request, phone_type):
 
     firmware = get_object_or_404(Firmware, phone_type__phone_type=phone_type)
     context = {
-        'firmware': firmware.host + firmware.path + firmware.filename
+        'firmware': firmware,
     }
 
     return render(request, 'firmware.xml', context, 'application/xml')
