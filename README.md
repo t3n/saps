@@ -5,6 +5,10 @@
 
 >A django application to provision snom phones with sipgate as sip provider.
 
+## Project Status
+
+Alpha, everything is subject to change.
+
 ## Table of Contents
 
 - [Background](#background)
