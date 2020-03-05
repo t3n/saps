@@ -5,7 +5,7 @@ behave environment module for testing behave-django
 
 def before_feature(context, feature):
     if feature.name == 'Fixture loading':
-        context.fixtures = ['behave-fixtures.json']
+        context.fixtures = ['phone_type']
 
     elif feature.name == 'Fixture loading with decorator':
         # Including empty fixture to test that #92 is fixed
