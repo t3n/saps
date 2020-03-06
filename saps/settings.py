@@ -1,5 +1,7 @@
 import os
 import environ
+import dj_database_url
+import psycopg2
 
 BASE_DIR = environ.Path(__file__) - 2
 env = environ.Env(
@@ -80,11 +82,14 @@ WSGI_APPLICATION = 'saps.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('PG_DB_NAME'),
+        'USER': env('PG_DB_USER'),
+        'PASSWORD': env('PG_DB_PASS'),
+        'HOST': env('PG_DB_HOST'),
+        'PORT': env('PG_DB_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
