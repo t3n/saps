@@ -44,15 +44,9 @@ RUN mkdir /code/
 WORKDIR /code/
 ADD . /code/
 RUN chown -R ${APP_USER}:${APP_USER} /code/
+
 # uWSGI will listen on this port
 EXPOSE 8000
-
-# DATABASE Configuration
-ENV PG_DB_HOST=localhost
-ENV PG_DB_PORT=5432
-ENV PG_DB_USER=saps
-ENV PG_DB_PASS=changeme
-ENV PG_DB_NAME=saps
 
 # Add any static environment variables needed by Django or your settings file here:
 ENV DJANGO_SETTINGS_MODULE=saps.deploy

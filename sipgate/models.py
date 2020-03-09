@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 class OAuth2Token(models.Model):
     name = models.CharField(max_length=40)
     token_type = models.CharField(max_length=40)
-    access_token = models.CharField(max_length=5000)
-    refresh_token = models.CharField(max_length=5000)
+    access_token = models.TextField()
+    refresh_token = models.TextField()
     expires_at = models.PositiveIntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
