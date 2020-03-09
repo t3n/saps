@@ -8,7 +8,7 @@ from django.utils.crypto import get_random_string
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # noqa: F405
 
