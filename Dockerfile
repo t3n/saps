@@ -44,7 +44,7 @@ RUN mkdir /code/
 WORKDIR /code/
 ADD . /code/
 RUN chown -R ${APP_USER}:${APP_USER} /code/
-RUN cp saps/.env.example saps/.env
+
 # uWSGI will listen on this port
 EXPOSE 8000
 

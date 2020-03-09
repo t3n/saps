@@ -2,10 +2,20 @@ import os
 import environ
 import dj_database_url
 import psycopg2
+from django.utils.crypto import get_random_string
 
 BASE_DIR = environ.Path(__file__) - 2
 env = environ.Env(
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    SECRET_KEY=(str, get_random_string(length=50)),
+    SITE_ID=(int, 1),
+    SIPGATE_CLIENT_ID=(str, "dummy"),
+    SIPGATE_CLIENT_SECRET=(str, "dummy"),
+    PG_DB_NAME=(str, "saps"),
+    PG_DB_HOST=(str, "localhost"),
+    PG_DB_PORT=(int, 5432),
+    PG_DB_PASS=(str, "saps"),
+    PG_DB_USER=(str, "saps")
 )
 environ.Env.read_env()
 
@@ -13,8 +23,13 @@ environ.Env.read_env()
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
-SITE_ID = env.str('SITE_ID')
+SECRET_KEY = env('SECRET_KEY')
+
+SITE_ID = env('SITE_ID')
+
+SIPGATE_CLIENT_ID = env('SIPGATE_CLIENT_ID')
+
+SIPGATE_CLIENT_SECRET = env('SIPGATE_CLIENT_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
