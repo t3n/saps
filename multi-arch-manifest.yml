@@ -1,0 +1,11 @@
+image: t3nde/saps:latest
+manifests:
+  - image: t3nde/saps:amd64
+    platform:
+      architecture: amd64
+      os: linux
+  - image: t3nde/saps:arm32v7
+    platform:
+      architecture: arm
+      os: linux
+      variant: v7
