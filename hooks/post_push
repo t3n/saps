@@ -1,9 +1,27 @@
 #!/bin/bash
 
-# Use manifest-tool to create the manifest, given the experimental
-# "docker manifest" command isn't available yet on Docker Hub.
+# Use docker cli v18.09.6 to use experimental manifest feature
+curl -SL "https://download.docker.com/linux/static/stable/x86_64/docker-18.09.6.tgz" | tar xzv docker/docker --transform='s/.*/docker-cli/'
+mkdir ~/.docker
+# Add auths and experimental to docker-cli config
+echo '{"auths": '$DOCKERCFG',"experimental":"enabled"}' > ~/.docker/config.json
+# Check if all arch images are in dockerhub
+VIRTUAL_IMAGE=$(echo "${IMAGE_NAME}" | rev | cut -d- -f2- | rev )
 
-curl -Lo manifest-tool https://github.com/estesp/manifest-tool/releases/download/v0.9.0/manifest-tool-linux-amd64
-chmod +x manifest-tool
+AMD64_IMAGE="$VIRTUAL_IMAGE-amd64"
+ARM32_IMAGE="$VIRTUAL_IMAGE-arm32v7"
 
-./manifest-tool push from-spec multi-arch-manifest.yaml
+echo "checking if ${AMD64_IMAGE} Manifest exists"
+if ! ./docker-cli manifest inspect ${AMD64_IMAGE}; then AMD64_IMAGE='' ; fi
+echo "checking if ${ARM32_IMAGE} Manifest exists"
+if ! ./docker-cli manifest inspect ${ARM32_IMAGE}; then ARM32_IMAGE='' ; fi
+
+echo "Creating multiarch manifest"
+./docker-cli manifest create $VIRTUAL_IMAGE $AMD64_IMAGE $ARM32_IMAGE $ARM64_IMAGE
+if [ -n "${ARM32_IMAGE}" ]; then
+  ./docker-cli manifest annotate $VIRTUAL_IMAGE $ARM32_IMAGE --os linux --arch arm
+fi
+
+./docker-cli manifest push $VIRTUAL_IMAGE
+
+rm -r docker-cli ~/.docker
