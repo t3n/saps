@@ -9,7 +9,7 @@ BUILD_ARCH=$(echo "${DOCKERFILE_PATH}" | cut -d '.' -f 2)
 
 case ${BUILD_ARCH} in
     amd64   ) QEMU_ARCH="x86_64" ;;
-    arm32v7 ) QEMU_ARCH="aarch64" ;
+    arm32v7 ) QEMU_ARCH="arm" ;
  esac
 
 QEMU_USER_STATIC_DOWNLOAD_URL="https://github.com/multiarch/qemu-user-static/releases/download"
