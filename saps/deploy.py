@@ -1,5 +1,4 @@
 import os
-
 from .settings import *   # noqa: F403
 from django.utils.crypto import get_random_string
 

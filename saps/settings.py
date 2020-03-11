@@ -1,6 +1,5 @@
 import os
 import environ
-import dj_database_url
 import psycopg2
 from django.utils.crypto import get_random_string
 
