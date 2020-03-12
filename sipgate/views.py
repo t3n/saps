@@ -3,6 +3,8 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.admin.views.decorators import staff_member_required, user_passes_test
+from django.utils.decorators import method_decorator
 from authlib.integrations.django_client import OAuth
 from authlib.common.errors import AuthlibBaseError
 
@@ -20,7 +22,17 @@ def fetch_token(name, request):
     return token.to_token()
 
 
+def forbidden(msg):
+    response = HttpResponse()
+    response.write('<h1>' + msg + '</h1>')
+    response.status_code = 403
+    return response
+
+
 def update_token(name, token, refresh_token=None, access_token=None):
+    userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', token=token).json()
+    userdata = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + userinfo['sub'], token=token).json()
+
     if refresh_token:
         item = OAuth2Token.objects.get(name=name, refresh_token=refresh_token)
     elif access_token:
@@ -34,6 +46,10 @@ def update_token(name, token, refresh_token=None, access_token=None):
     item.expires_at = token['expires_at']
     item.save()
 
+    # Check if user is Staff
+    User.objects.filter(email=item.user).update(
+        is_staff=userdata['admin']
+    )
 
 oauth = OAuth(fetch_token=fetch_token, update_token=update_token)
 oauth.register(
@@ -55,8 +71,12 @@ def get_credentials(request, user_id):
 
 
 def assign(request):
-    users = []
+    if request.user.is_authenticated is not True:
+        return redirect("/login")
+    if request.user.is_staff is not True:
+        return("Not Staff")
 
+    users = []
     for user in oauth.sipgate.get('https://api.sipgate.com/v2/app/users/', request=request).json()['items']:
         users.append((user['id'], user['firstname'] + " " + user['lastname']),)
 
@@ -73,6 +93,7 @@ def assign(request):
         return redirect('assign')
     else:
         form = AssignForm(choices=users)
+
     return render(request, 'assign.html', {'form': form})
 
 
