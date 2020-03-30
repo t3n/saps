@@ -8,4 +8,5 @@ urlpatterns = [
     path('<str:phone_type>/general.xml', views.general, name='general'),
     path('<str:phone_type>/firmware.xml', views.firmware, name='firmware'),
     path('<str:phone_type>/<str:mac_address>.xml', views.specific, name='specific'),
+    path('fkeys', views.function_keys, name='function_keys'),
 ]

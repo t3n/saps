@@ -1,0 +1,39 @@
+<script type="text/javascript">
+function add(){
+      var new_chq_no = parseInt($('#form_total').val())+1;
+      var new_input="<input type='text' id='"+new_chq_no+"'>";
+      $('#form').append(new_input);
+      $('#form_total').val(new_chq_no)
+    }
+    function remove(){
+      var last_chq_no = $('#total_chq').val();
+      if(last_chq_no>1){
+        $('#new_'+last_chq_no).remove();
+        $('#total_chq').val(last_chq_no-1);
+      }
+    }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+<form action="" method="post" novalidate>
+    {% csrf_token %}
+    {{ form }}
+<br>
+<div id="form">
+{% if fkey.phone_type.phone_type is snom370 %}
+    {% for fkey in fkeys %}
+        <label for="fkey{{ fkey.id }}">Fuktionstaste {{ fkey.id }} für {{ fkey.phone_type.phone_type }}</label>
+        <input id="{{ fkey.id }}" type="text" name="fkey_function" value="{{ fkey.function }}"><br>
+    {% endfor %}
+{% endif %}
+</div>
+<input type="hidden" value="0" id="form_total">
+{{ fkeys.id }}
+<div id="fkey_function"></div>
+
+</form>
+
+<button onclick="add()">Add</button>
+<button onclick="remove()">remove</button>
+<input type="submit" value="OK">

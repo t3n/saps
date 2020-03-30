@@ -1,5 +1,5 @@
 from django.http import HttpResponseBadRequest
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import ObjectDoesNotExist
 
@@ -8,8 +8,31 @@ from .models import (
     Language,
     Phone,
     PhoneType,
+    FunctionKeys,
 )
 from .utils import mac_address_valid, phone_type_valid
+from .forms import FKeys
+
+
+def function_keys(request):
+    phones = []
+
+    for phone in Phone.objects.filter(username=request.user).values():
+        phones.append((phone['id'], phone['username']),)
+    
+    my_list = list(range(1, 1001))
+    print(my_list)
+    fkeys = FunctionKeys.objects.filter(phone_type=phone['id'])
+    if request.method == 'POST':
+        form = FKeys(request.POST, choices=phones)
+        if form.is_valid():
+            print(request.POST.get)
+            
+        return redirect('function_keys')
+    else:
+        form = FKeys(choices=phones)
+
+    return render(request, 'fkeys.html', {'form': form, 'fkeys': fkeys})
 
 
 def phone_type(request, phone_type):

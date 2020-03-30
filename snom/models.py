@@ -8,6 +8,7 @@ class Phone(models.Model):
     password = models.CharField(max_length=200, null=True, blank=True)
     realname = models.CharField(max_length=200, null=True, blank=True)
     host = models.CharField(max_length=200, null=True, blank=True)
+    fkey = models.ForeignKey('FunctionKeys', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.phone_type.phone_type + '-' + self.mac_address
@@ -21,6 +22,15 @@ class Firmware(models.Model):
 
     def __str__(self):
         return self.host + self.path + self.filename
+
+
+class FunctionKeys(models.Model):
+    phone_type = models.ForeignKey('Phone', on_delete=models.CASCADE, null=True, blank=True)
+    fkey = models.CharField(max_length=25, null=True, blank=True)
+    function = models.CharField(max_length=25, null=True, blank=True)
+
+    def __str__(self):
+        return self.phone_type.phone_type.phone_type + '-' + self.phone_type.mac_address
 
 
 class Language(models.Model):
