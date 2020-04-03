@@ -3,8 +3,10 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.admin.views.decorators import staff_member_required, user_passes_test
-from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import (
+    login_required,
+    user_passes_test,
+)
 from authlib.integrations.django_client import OAuth
 from authlib.common.errors import AuthlibBaseError
 
@@ -51,6 +53,7 @@ def update_token(name, token, refresh_token=None, access_token=None):
         is_staff=userdata['admin']
     )
 
+
 oauth = OAuth(fetch_token=fetch_token, update_token=update_token)
 oauth.register(
     name='sipgate',
@@ -70,6 +73,7 @@ def get_credentials(request, user_id):
     return oauth.sipgate.get('https://api.sipgate.com/v2/' + user_id + "/devices", request=request).json()['items'][0]
 
 
+@user_passes_test(lambda u: u.is_staff, login_url='login')
 def assign(request):
     if request.user.is_authenticated is not True:
         return redirect("/login")
@@ -84,7 +88,9 @@ def assign(request):
         form = AssignForm(request.POST, choices=users)
         if form.is_valid():
             credentials = get_credentials(request, form.cleaned_data['user'])
+            userdata = oauth.sipgate.get('https://api.sipgate.com/v2/users/' + form.cleaned_data['user'], request=request).json()
             Phone.objects.filter(pk=form.cleaned_data['phones'].id).update(
+                user=User.objects.filter(email=userdata['email']).first(),
                 username=credentials['credentials']['username'],
                 password=credentials['credentials']['password'],
                 realname=credentials['alias'],
@@ -132,13 +138,12 @@ def authorize(request):
         )
         sipgate_token.save()
 
-    response = HttpResponse()
-    response.write('<h1>Hello ' + userdata['email'] + '</h1>')
     auth_login(request, user)
 
-    return response
+    return redirect('me')
 
 
+@login_required(login_url='login')
 def me(request):
     try:
         userinfo = oauth.sipgate.get('https://api.sipgate.com/v2/authorization/userinfo', request=request).json()

@@ -1,6 +1,7 @@
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.decorators import login_required
 from django.db.models import ObjectDoesNotExist
 
 from .models import (
@@ -8,31 +9,67 @@ from .models import (
     Language,
     Phone,
     PhoneType,
-    FunctionKeys,
+    FunctionKey,
 )
 from .utils import mac_address_valid, phone_type_valid
-from .forms import FKeys
+from .forms import FunctionKeyForm
 
 
+@login_required(login_url='login')
 def function_keys(request):
-    phones = []
+    try:
+        phone = Phone.objects.filter(user=request.user).first()
+    except ObjectDoesNotExist:
+        return redirect('assign')
 
-    for phone in Phone.objects.filter(username=request.user).values():
-        phones.append((phone['id'], phone['username']),)
-    
-    my_list = list(range(1, 1001))
-    print(my_list)
-    fkeys = FunctionKeys.objects.filter(phone_type=phone['id'])
-    if request.method == 'POST':
-        form = FKeys(request.POST, choices=phones)
-        if form.is_valid():
-            print(request.POST.get)
-            
+    if phone is None:
+        return redirect('assign')
+
+    fkeys = get_function_keys(phone)
+
+    form = FunctionKeyForm(request.POST or None, fkeys=fkeys)
+    if form.is_valid():
+        for (fkey, function) in form.function_keys():
+            save_fkey(phone, fkey, function)
         return redirect('function_keys')
     else:
-        form = FKeys(choices=phones)
+        form = FunctionKeyForm(fkeys=fkeys)
 
-    return render(request, 'fkeys.html', {'form': form, 'fkeys': fkeys})
+    return render(request, 'fkeys.html', {'form': form})
+
+
+def get_function_keys(phone):
+    fkey_count = PhoneType.objects.get(phone_type=phone.phone_type).function_keys
+    fkeys = list(FunctionKey.objects.filter(phone=phone).order_by('fkey'))
+
+    fkey_range = list(range(1, fkey_count + 1))
+    for fkey in fkeys:
+        fkey_range.remove(fkey.fkey)
+
+    for i in fkey_range:
+        fkeys.insert(i - 1, FunctionKey(phone=phone, fkey=i))
+
+    return fkeys
+
+
+def save_fkey(phone, fkey, function):
+    if function:
+        try:
+            f = FunctionKey.objects.get(phone=phone, fkey=fkey)
+        except ObjectDoesNotExist:
+            f = FunctionKey()
+
+        f.phone = phone
+        f.fkey = fkey
+        f.function = function
+        f.save()
+    else:
+        try:
+            f = FunctionKey.objects.get(phone=phone, fkey=fkey)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            f.delete()
 
 
 def phone_type(request, phone_type):

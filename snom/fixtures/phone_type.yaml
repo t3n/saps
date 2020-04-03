@@ -2,83 +2,100 @@
   pk: 1
   fields:
     phone_type: snom300
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 2
   fields:
     phone_type: snom320
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 3
   fields:
     phone_type: snom360
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 4
   fields:
     phone_type: snom370
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 5
   fields:
     phone_type: snomD305
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 6
   fields:
     phone_type: snomD315
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 7
   fields:
     phone_type: snomD345
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 8
   fields:
     phone_type: snomD375
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 9
   fields:
     phone_type: snomD385
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 10
   fields:
     phone_type: snomD712
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 11
   fields:
     phone_type: snomD715
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 12
   fields:
     phone_type: snomD725
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 13
   fields:
     phone_type: snomD745
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 14
   fields:
     phone_type: snomD717
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 15
   fields:
     phone_type: snomD735
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 16
   fields:
     phone_type: snomD765
+    function_keys: 12
 
 - model: snom.phonetype
   pk: 17
   fields:
     phone_type: snomD785
+    function_keys: 12
