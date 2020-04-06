@@ -7,5 +7,5 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('authorize', views.authorize, name='authorize'),
     path('me', views.me, name='me'),
-    path('assign',views.assign,name='assign'),
+    path('assign', views.assign, name='assign'),
 ]

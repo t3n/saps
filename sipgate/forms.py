@@ -1,6 +1,7 @@
 from django import forms
+
 from snom.models import Phone
-from django.db import models
+
 
 class AssignForm(forms.Form):
     def __init__(self, *args, **kwargs):
