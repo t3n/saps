@@ -5,7 +5,7 @@ from .models import (
     Language,
     Phone,
     PhoneType,
-    FunctionKeys
+    FunctionKey,
 )
 
 
@@ -13,4 +13,4 @@ admin.site.register(Firmware)
 admin.site.register(Language)
 admin.site.register(Phone)
 admin.site.register(PhoneType)
-admin.site.register(FunctionKeys)
+admin.site.register(FunctionKey)

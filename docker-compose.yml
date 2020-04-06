@@ -1,0 +1,11 @@
+version: '2.0'
+services:
+  db:
+    image: postgres:12-alpine
+    container_name: "saps-postgres"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: saps
+      POSTGRES_PASSWORD: saps
+      POSTGRES_DB: saps
