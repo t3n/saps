@@ -11,3 +11,5 @@ class AssignForm(forms.Form):
 
     phones = forms.ModelChoiceField(queryset=Phone.objects.all())
     user = forms.ChoiceField(choices=())
+    phones.widget.attrs.update({'input type' : 'text', 'class': 'form-control'})
+    user.widget.attrs.update({'input type' : 'text', 'class': 'form-control'})

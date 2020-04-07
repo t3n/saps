@@ -8,6 +8,7 @@ class FunctionKeyForm(forms.Form):
 
         for i, fkey in enumerate(fkeys):
             self.fields['fkey_%s' % i] = forms.CharField(label=fkey.fkey, initial=fkey.function, required=False)
+            self.fields['fkey_%s' % i].widget.attrs.update({'input type' : 'text', 'class': 'form-control'})
 
     def function_keys(self):
         for name, value in self.cleaned_data.items():
