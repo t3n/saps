@@ -83,7 +83,7 @@ def assign(request):
 
     users = []
     for user in oauth.sipgate.get(
-        "https://api.sipgate.com/v2/app/users/", request=request
+        "https://api.sipgate.com/v2/users/", request=request
     ).json()["items"]:
         users.append((user["id"], user["firstname"] + " " + user["lastname"]),)
 
