@@ -1,5 +1,5 @@
 import os
-from .settings import *   # noqa: F403
+from .settings import *  # noqa: F403
 from django.utils.crypto import get_random_string
 
 # This is NOT a complete production settings file. For more, see:
@@ -7,8 +7,8 @@ from django.utils.crypto import get_random_string
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # noqa: F405
+STATIC_ROOT = os.path.join(BASE_DIR, "static")  # noqa: F405
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"

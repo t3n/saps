@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Phone(models.Model):
-    phone_type = models.ForeignKey('PhoneType', on_delete=models.CASCADE)
+    phone_type = models.ForeignKey("PhoneType", on_delete=models.CASCADE)
     mac_address = models.CharField(max_length=20, unique=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     username = models.CharField(max_length=200, null=True, blank=True)
@@ -12,11 +12,11 @@ class Phone(models.Model):
     host = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        return self.phone_type.phone_type + '-' + self.mac_address
+        return self.phone_type.phone_type + "-" + self.mac_address
 
 
 class Firmware(models.Model):
-    phone_type = models.ForeignKey('PhoneType', on_delete=models.CASCADE)
+    phone_type = models.ForeignKey("PhoneType", on_delete=models.CASCADE)
     host = models.CharField(max_length=200)
     path = models.CharField(max_length=200)
     filename = models.CharField(max_length=200)
@@ -26,19 +26,28 @@ class Firmware(models.Model):
 
 
 class FunctionKey(models.Model):
-    phone = models.ForeignKey('Phone', on_delete=models.CASCADE)
+    phone = models.ForeignKey("Phone", on_delete=models.CASCADE)
     fkey = models.IntegerField()
     function = models.CharField(max_length=25)
 
     class Meta:
-        unique_together = ('phone', 'fkey',)
+        unique_together = (
+            "phone",
+            "fkey",
+        )
 
     def __str__(self):
-        return self.phone.phone_type.phone_type + '-' + self.phone.mac_address + '-' + str(self.fkey)
+        return (
+            self.phone.phone_type.phone_type
+            + "-"
+            + self.phone.mac_address
+            + "-"
+            + str(self.fkey)
+        )
 
 
 class Language(models.Model):
-    phone_type = models.ForeignKey('PhoneType', on_delete=models.CASCADE)
+    phone_type = models.ForeignKey("PhoneType", on_delete=models.CASCADE)
     host = models.CharField(max_length=200)
     path = models.CharField(max_length=200)
     filename = models.CharField(max_length=200)

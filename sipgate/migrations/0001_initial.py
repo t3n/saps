@@ -15,19 +15,33 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='OAuth2Token',
+            name="OAuth2Token",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=40)),
-                ('token_type', models.CharField(max_length=40)),
-                ('access_token', models.CharField(max_length=200)),
-                ('refresh_token', models.CharField(max_length=200)),
-                ('expires_at', models.PositiveIntegerField()),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=40)),
+                ("token_type", models.CharField(max_length=40)),
+                ("access_token", models.CharField(max_length=200)),
+                ("refresh_token", models.CharField(max_length=200)),
+                ("expires_at", models.PositiveIntegerField()),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'OAuth2Token',
-                'verbose_name_plural': 'OAuth2Tokens',
+                "verbose_name": "OAuth2Token",
+                "verbose_name_plural": "OAuth2Tokens",
             },
         ),
     ]
