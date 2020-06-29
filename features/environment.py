@@ -4,23 +4,23 @@ behave environment module for testing behave-django
 
 
 def before_feature(context, feature):
-    if feature.name == 'Fixture loading':
-        context.fixtures = ['phone_type']
+    if feature.name == "Fixture loading":
+        context.fixtures = ["phone_type"]
 
-    elif feature.name == 'Fixture loading with decorator':
+    elif feature.name == "Fixture loading with decorator":
         # Including empty fixture to test that #92 is fixed
-        context.fixtures = ['empty-fixture.json']
+        context.fixtures = ["empty-fixture.json"]
 
 
 def before_scenario(context, scenario):
-    if scenario.name == 'Load fixtures for this scenario and feature':
-        context.fixtures.append('behave-second-fixture.json')
+    if scenario.name == "Load fixtures for this scenario and feature":
+        context.fixtures.append("behave-second-fixture.json")
 
-    if scenario.name == 'Load fixtures then reset sequences':
-        context.fixtures.append('behave-second-fixture.json')
+    if scenario.name == "Load fixtures then reset sequences":
+        context.fixtures.append("behave-second-fixture.json")
         context.reset_sequences = True
 
-    if scenario.name == 'Load fixtures with multi_db option':
+    if scenario.name == "Load fixtures with multi_db option":
         context.multi_db = True
 
 

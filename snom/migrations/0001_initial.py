@@ -15,56 +15,122 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='PhoneType',
+            name="PhoneType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('phone_type', models.CharField(max_length=12)),
-                ('function_keys', models.IntegerField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("phone_type", models.CharField(max_length=12)),
+                ("function_keys", models.IntegerField()),
             ],
         ),
         migrations.CreateModel(
-            name='Phone',
+            name="Phone",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('mac_address', models.CharField(max_length=20, unique=True)),
-                ('username', models.CharField(blank=True, max_length=200, null=True)),
-                ('password', models.CharField(blank=True, max_length=200, null=True)),
-                ('realname', models.CharField(blank=True, max_length=200, null=True)),
-                ('host', models.CharField(blank=True, max_length=200, null=True)),
-                ('phone_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='snom.PhoneType')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("mac_address", models.CharField(max_length=20, unique=True)),
+                ("username", models.CharField(blank=True, max_length=200, null=True)),
+                ("password", models.CharField(blank=True, max_length=200, null=True)),
+                ("realname", models.CharField(blank=True, max_length=200, null=True)),
+                ("host", models.CharField(blank=True, max_length=200, null=True)),
+                (
+                    "phone_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="snom.PhoneType"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Language',
+            name="Language",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('host', models.CharField(max_length=200)),
-                ('path', models.CharField(max_length=200)),
-                ('filename', models.CharField(max_length=200)),
-                ('phone_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='snom.PhoneType')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("host", models.CharField(max_length=200)),
+                ("path", models.CharField(max_length=200)),
+                ("filename", models.CharField(max_length=200)),
+                (
+                    "phone_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="snom.PhoneType"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Firmware',
+            name="Firmware",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('host', models.CharField(max_length=200)),
-                ('path', models.CharField(max_length=200)),
-                ('filename', models.CharField(max_length=200)),
-                ('phone_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='snom.PhoneType')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("host", models.CharField(max_length=200)),
+                ("path", models.CharField(max_length=200)),
+                ("filename", models.CharField(max_length=200)),
+                (
+                    "phone_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="snom.PhoneType"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='FunctionKey',
+            name="FunctionKey",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fkey', models.IntegerField()),
-                ('function', models.CharField(max_length=25)),
-                ('phone', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='snom.Phone')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("fkey", models.IntegerField()),
+                ("function", models.CharField(max_length=25)),
+                (
+                    "phone",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="snom.Phone"
+                    ),
+                ),
             ],
-            options={
-                'unique_together': {('phone', 'fkey')},
-            },
+            options={"unique_together": {("phone", "fkey")},},
         ),
     ]

@@ -7,9 +7,9 @@ class AssignForm(forms.Form):
     def __init__(self, *args, **kwargs):
         choices = kwargs.pop("choices")
         super(AssignForm, self).__init__(*args, **kwargs)
-        self.fields['user'].choices = choices
+        self.fields["user"].choices = choices
 
     phones = forms.ModelChoiceField(queryset=Phone.objects.all())
     user = forms.ChoiceField(choices=())
-    phones.widget.attrs.update({'input type' : 'text', 'class': 'form-control'})
-    user.widget.attrs.update({'input type' : 'text', 'class': 'form-control'})
+    phones.widget.attrs.update({"input type": "text", "class": "form-control"})
+    user.widget.attrs.update({"input type": "text", "class": "form-control"})

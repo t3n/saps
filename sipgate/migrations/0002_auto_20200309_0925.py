@@ -6,18 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('sipgate', '0001_initial'),
+        ("sipgate", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='oauth2token',
-            name='access_token',
-            field=models.TextField(),
+            model_name="oauth2token", name="access_token", field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='oauth2token',
-            name='refresh_token',
-            field=models.TextField(),
+            model_name="oauth2token", name="refresh_token", field=models.TextField(),
         ),
     ]
