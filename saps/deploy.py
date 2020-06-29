@@ -1,6 +1,5 @@
 import os
 from .settings import *  # noqa: F403
-from django.utils.crypto import get_random_string
 
 # This is NOT a complete production settings file. For more, see:
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
