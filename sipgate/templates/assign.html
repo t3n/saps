@@ -1,6 +1,16 @@
-<form action="" method="post" novalidate>
-<a>{{ redirect_message }}</a>
-    {% csrf_token %}
-    {{ form }}
-  <input type="submit" value="Submit" />
-</form>
+{% include "navbar.html" %}
+  <div class="container">
+    <section>
+      <h1>Telefon zuweisen</h1>
+      <div class="row">
+        <div class="input-group mb-3">  
+          <div class="input-group-prepend">
+            <form action="" method="post" novalidate>
+              {% csrf_token %}
+              {{ form.as_p }}
+              <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+          </div>
+        </div>
+    </div>
+  </div>
