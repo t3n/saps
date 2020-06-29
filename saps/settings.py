@@ -1,6 +1,5 @@
 import os
 import environ
-import psycopg2
 from django.utils.crypto import get_random_string
 
 BASE_DIR = environ.Path(__file__) - 2
