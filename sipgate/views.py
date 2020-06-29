@@ -56,8 +56,10 @@ def update_token(name, token, refresh_token=None, access_token=None):
 oauth = OAuth(fetch_token=fetch_token, update_token=update_token)
 oauth.register(
     name="sipgate",
-    access_token_url="https://login.sipgate.com/auth/realms/third-party/protocol/openid-connect/token",
-    authorize_url="https://login.sipgate.com/auth/realms/third-party/protocol/openid-connect/auth",
+    access_token_url="https://login.sipgate.com\
+            /auth/realms/third-party/protocol/openid-connect/token",
+    authorize_url="https://login.sipgate.com\
+            /auth/realms/third-party/protocol/openid-connect/auth",
     api_base_url="https://api.sipgate.com/v2",
     client_kwargs={"scope": "all"},
 )
