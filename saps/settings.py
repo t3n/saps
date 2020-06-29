@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     "saps",
     "sipgate",
     "snom",
-    "widget_tweaks",
 ]
 
 MIDDLEWARE = [
