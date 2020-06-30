@@ -70,9 +70,9 @@ def forbidden(msg):
 
 def home(request):
     if request.user.is_authenticated is not True:
-        return redirect("/login")
+        return redirect("sipgate:login")
     else:
-        return redirect("/me")
+        return redirect("sipgate:me")
 
 
 def get_credentials(request, user_id):
@@ -84,7 +84,7 @@ def get_credentials(request, user_id):
 @user_passes_test(lambda u: u.is_staff, login_url="login")
 def assign(request):
     if request.user.is_authenticated is not True:
-        return redirect("/login")
+        return redirect("sipgate:login")
     if request.user.is_staff is not True:
         return "Not Staff"
 
@@ -125,7 +125,7 @@ def device(request, user_id):
 
 
 def login(request):
-    redirect_uri = request.build_absolute_uri(reverse("authorize"))
+    redirect_uri = request.build_absolute_uri(reverse("sipgate:authorize"))
     return oauth.sipgate.authorize_redirect(request, redirect_uri)
 
 
@@ -133,7 +133,7 @@ def authorize(request):
     try:
         token = oauth.sipgate.authorize_access_token(request)
     except AuthlibBaseError:
-        return redirect("login")
+        return redirect("sipgate:login")
     userinfo = oauth.sipgate.get(
         "https://api.sipgate.com/v2/authorization/userinfo", token=token
     ).json()
@@ -165,7 +165,7 @@ def authorize(request):
 
     auth_login(request, user)
 
-    return redirect("me")
+    return redirect("sipgate:me")
 
 
 @login_required(login_url="login")
@@ -175,7 +175,7 @@ def me(request):
             "https://api.sipgate.com/v2/authorization/userinfo", request=request
         ).json()
     except (ObjectDoesNotExist, TypeError):
-        return redirect("login")
+        return redirect("sipgate:login")
     userdata = oauth.sipgate.get(
         "https://api.sipgate.com/v2/users/" + userinfo["sub"], request=request
     ).json()

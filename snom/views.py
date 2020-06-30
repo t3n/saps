@@ -20,10 +20,10 @@ def function_keys(request, device_id):
     try:
         phone = Phone.objects.filter(user=request.user, device=device_id).first()
     except ObjectDoesNotExist:
-        return redirect("assign")
+        return redirect("sipgate:assign")
 
     if phone is None:
-        return redirect("assign")
+        return redirect("sipgate:assign")
 
     fkeys = get_function_keys(phone)
 
@@ -31,7 +31,7 @@ def function_keys(request, device_id):
     if form.is_valid():
         for (fkey, function) in form.function_keys():
             save_fkey(phone, fkey, function)
-        return redirect("function_keys")
+        return redirect("snom:function_keys")
     else:
         form = FunctionKeyForm(fkeys=fkeys)
 
