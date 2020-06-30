@@ -16,9 +16,9 @@ from .forms import FunctionKeyForm
 
 
 @login_required(login_url="login")
-def function_keys(request):
+def function_keys(request, device_id):
     try:
-        phone = Phone.objects.filter(user=request.user).first()
+        phone = Phone.objects.filter(user=request.user, device=device_id).first()
     except ObjectDoesNotExist:
         return redirect("assign")
 

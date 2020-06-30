@@ -103,6 +103,7 @@ def assign(request):
         ).json()
         Phone.objects.filter(pk=form.cleaned_data["phone"].id).update(
             user=User.objects.filter(email=userdata["email"]).first(),
+            device=form.cleaned_data["device"],
             username=credentials["credentials"]["username"],
             password=credentials["credentials"]["password"],
             realname=credentials["alias"],
@@ -179,7 +180,7 @@ def me(request):
         "https://api.sipgate.com/v2/users/" + userinfo["sub"], request=request
     ).json()
 
-    response = HttpResponse()
-    response.write("<h1>Hello " + userdata["email"] + "</h1>" + userdata["id"])
+    devices = Phone.objects.filter(user__email=userdata["email"])
+    context = {"userdata": userdata, "devices": devices}
 
-    return response
+    return render(request, "me.html", context)

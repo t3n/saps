@@ -7,15 +7,15 @@
           <div class="input-group-prepend">
             <form action="" method="post" id="AssignForm" data-device-url="/device/" novalidate>
               <a>{{ redirect_message }}</a>
-                {% csrf_token %}
-                <table>
-                  {{ form.as_table }}
-                </table>
+              {% csrf_token %}
+              <table>
+                {{ form.as_table }}
+              </table>
               <input class="btn btn-primary" type="submit" value="Submit">
             </form>
           </div>
         </div>
-    </div>
+    </section>
   </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
