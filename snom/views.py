@@ -9,9 +9,8 @@ from .models import (
     Language,
     Phone,
     PhoneType,
-    FunctionKey,
 )
-from .utils import mac_address_valid, phone_type_valid
+from .utils import mac_address_valid, phone_type_valid, get_function_keys, save_fkey
 from .forms import FunctionKeyForm
 
 
@@ -36,40 +35,6 @@ def function_keys(request, device_id):
         form = FunctionKeyForm(fkeys=fkeys)
 
     return render(request, "fkeys.html", {"form": form})
-
-
-def get_function_keys(phone):
-    fkey_count = PhoneType.objects.get(phone_type=phone.phone_type).function_keys
-    fkeys = list(FunctionKey.objects.filter(phone=phone).order_by("fkey"))
-
-    fkey_range = list(range(1, fkey_count + 1))
-    for fkey in fkeys:
-        fkey_range.remove(fkey.fkey)
-
-    for i in fkey_range:
-        fkeys.insert(i - 1, FunctionKey(phone=phone, fkey=i))
-
-    return fkeys
-
-
-def save_fkey(phone, fkey, function):
-    if function:
-        try:
-            f = FunctionKey.objects.get(phone=phone, fkey=fkey)
-        except ObjectDoesNotExist:
-            f = FunctionKey()
-
-        f.phone = phone
-        f.fkey = fkey
-        f.function = function
-        f.save()
-    else:
-        try:
-            f = FunctionKey.objects.get(phone=phone, fkey=fkey)
-        except ObjectDoesNotExist:
-            pass
-        else:
-            f.delete()
 
 
 def phone_type(request, phone_type):
