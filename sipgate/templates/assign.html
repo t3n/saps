@@ -5,12 +5,30 @@
       <div class="row">
         <div class="input-group mb-3">  
           <div class="input-group-prepend">
-            <form action="" method="post" novalidate>
-              {% csrf_token %}
-              {{ form.as_p }}
+            <form action="" method="post" id="AssignForm" data-device-url="/device/" novalidate>
+              <a>{{ redirect_message }}</a>
+                {% csrf_token %}
+                <table>
+                  {{ form.as_table }}
+                </table>
               <input class="btn btn-primary" type="submit" value="Submit">
             </form>
           </div>
         </div>
     </div>
   </div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+  $("#id_user").change(function () {
+    var deviceId = $(this).val();
+    var url = $("#AssignForm").attr("data-device-url").concat(deviceId);
+
+    $.ajax({
+      url: url,
+      success: function (data) {
+        $("#id_device").html(data);
+      }
+    });
+
+  }).change();
+</script>

@@ -21,21 +21,7 @@ def fetch_token(name, request):
     return token.to_token()
 
 
-def forbidden(msg):
-    response = HttpResponse()
-    response.write("<h1>" + msg + "</h1>")
-    response.status_code = 403
-    return response
-
-
 def update_token(name, token, refresh_token=None, access_token=None):
-    userinfo = oauth.sipgate.get(
-        "https://api.sipgate.com/v2/authorization/userinfo", token=token
-    ).json()
-    userdata = oauth.sipgate.get(
-        "https://api.sipgate.com/v2/users/" + userinfo["sub"], token=token
-    ).json()
-
     if refresh_token:
         item = OAuth2Token.objects.get(name=name, refresh_token=refresh_token)
     elif access_token:
@@ -50,6 +36,12 @@ def update_token(name, token, refresh_token=None, access_token=None):
     item.save()
 
     # Check if user is Staff
+    userinfo = oauth.sipgate.get(
+        "https://api.sipgate.com/v2/authorization/userinfo", token=token
+    ).json()
+    userdata = oauth.sipgate.get(
+        "https://api.sipgate.com/v2/users/" + userinfo["sub"], token=token
+    ).json()
     User.objects.filter(email=item.user).update(is_staff=userdata["admin"])
 
 
@@ -69,9 +61,18 @@ oauth.register(
 )
 
 
+def forbidden(msg):
+    response = HttpResponse()
+    response.write("<h1>" + msg + "</h1>")
+    response.status_code = 403
+    return response
+
+
 def home(request):
-    login_uri = reverse("login")
-    return HttpResponse(f'<a href="{login_uri}">Login with Sipgate</a>')
+    if request.user.is_authenticated is not True:
+        return redirect("/login")
+    else:
+        return redirect("/me")
 
 
 def get_credentials(request, user_id):
@@ -93,26 +94,33 @@ def assign(request):
     ).json()["items"]:
         users.append((user["id"], user["firstname"] + " " + user["lastname"]),)
 
-    if request.method == "POST":
-        form = AssignForm(request.POST, choices=users)
-        if form.is_valid():
-            credentials = get_credentials(request, form.cleaned_data["user"])
-            userdata = oauth.sipgate.get(
-                "https://api.sipgate.com/v2/users/" + form.cleaned_data["user"],
-                request=request,
-            ).json()
-            Phone.objects.filter(pk=form.cleaned_data["phones"].id).update(
-                user=User.objects.filter(email=userdata["email"]).first(),
-                username=credentials["credentials"]["username"],
-                password=credentials["credentials"]["password"],
-                realname=credentials["alias"],
-                host=credentials["credentials"]["sipServer"],
-            )
+    form = AssignForm(request.POST or None, choices=users)
+    if form.is_valid():
+        credentials = get_credentials(request, form.cleaned_data["user"])
+        userdata = oauth.sipgate.get(
+            "https://api.sipgate.com/v2/users/" + form.cleaned_data["user"],
+            request=request,
+        ).json()
+        Phone.objects.filter(pk=form.cleaned_data["phone"].id).update(
+            user=User.objects.filter(email=userdata["email"]).first(),
+            username=credentials["credentials"]["username"],
+            password=credentials["credentials"]["password"],
+            realname=credentials["alias"],
+            host=credentials["credentials"]["sipServer"],
+        )
         return redirect("assign")
     else:
         form = AssignForm(choices=users)
 
     return render(request, "assign.html", {"form": form})
+
+
+def device(request, user_id):
+    devices = oauth.sipgate.get(
+        "https://api.sipgate.com/v2/" + user_id + "/devices", request=request
+    ).json()["items"]
+
+    return render(request, "device.html", {"devices": devices})
 
 
 def login(request):
@@ -172,6 +180,6 @@ def me(request):
     ).json()
 
     response = HttpResponse()
-    response.write("<h1>Hello " + userdata["email"] + "</h1>")
+    response.write("<h1>Hello " + userdata["email"] + "</h1>" + userdata["id"])
 
     return response

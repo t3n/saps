@@ -9,7 +9,6 @@ class AssignForm(forms.Form):
         super(AssignForm, self).__init__(*args, **kwargs)
         self.fields["user"].choices = choices
 
-    phones = forms.ModelChoiceField(queryset=Phone.objects.all())
+    phone = forms.ModelChoiceField(queryset=Phone.objects.all())
     user = forms.ChoiceField(choices=())
-    phones.widget.attrs.update({"input type": "text", "class": "form-control"})
-    user.widget.attrs.update({"input type": "text", "class": "form-control"})
+    device = forms.ChoiceField()
