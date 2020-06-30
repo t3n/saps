@@ -109,7 +109,7 @@ def assign(request):
             realname=credentials["alias"],
             host=credentials["credentials"]["sipServer"],
         )
-        return redirect("assign")
+        return redirect("sipgate:assign")
     else:
         form = AssignForm(choices=users)
 
