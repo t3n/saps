@@ -73,6 +73,16 @@ def get_credentials(request, user_id):
     ).json()["items"][0]
 
 
+def create_user(userdata):
+    return User.objects.create_user(
+        username=userdata["email"],
+        email=userdata["email"],
+        first_name=userdata["firstname"],
+        last_name=userdata["lastname"],
+        is_staff=userdata["admin"],
+    )
+
+
 @user_passes_test(lambda u: u.is_staff, login_url="login")
 def assign(request):
     if request.user.is_authenticated is not True:
@@ -93,6 +103,9 @@ def assign(request):
             "https://api.sipgate.com/v2/users/" + form.cleaned_data["user"],
             request=request,
         ).json()
+        user = User.objects.filter(email=userdata["email"]).first()
+        if not user:
+            user = create_user(userdata)
         Phone.objects.filter(pk=form.cleaned_data["phone"].id).update(
             user=User.objects.filter(email=userdata["email"]).first(),
             device=form.cleaned_data["device"],
@@ -135,13 +148,7 @@ def authorize(request):
 
     user = User.objects.filter(email=userdata["email"]).first()
     if not user:
-        user = User.objects.create_user(
-            username=userdata["email"],
-            email=userdata["email"],
-            first_name=userdata["firstname"],
-            last_name=userdata["lastname"],
-            is_staff=userdata["admin"],
-        )
+        user = create_user(userdata)
 
     sipgate_token = OAuth2Token.objects.filter(name="sipgate", user=user).first()
     if not sipgate_token:
