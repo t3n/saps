@@ -31,7 +31,7 @@ def function_keys(request, device_id):
     if form.is_valid():
         for (fkey, function) in form.function_keys():
             save_fkey(phone, fkey, function)
-        return redirect("snom:function_keys")
+        return redirect("snom:function_keys", device_id)
     else:
         form = FunctionKeyForm(fkeys=fkeys)
 
