@@ -36,7 +36,9 @@ def assign(request):
 
     form = AssignForm(request.POST or None, choices=users)
     if form.is_valid():
-        credentials = get_credentials(request, form.cleaned_data["user"])
+        credentials = get_credentials(
+            request, form.cleaned_data["user"], form.cleaned_data["device"]
+        )
         userdata = oauth.sipgate.get(
             "https://api.sipgate.com/v2/users/" + form.cleaned_data["user"],
             request=request,

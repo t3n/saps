@@ -51,10 +51,12 @@ oauth.register(
 )
 
 
-def get_credentials(request, user_id):
-    return oauth.sipgate.get(
+def get_credentials(request, user_id, device_id):
+    for device in oauth.sipgate.get(
         "https://api.sipgate.com/v2/" + user_id + "/devices", request=request
-    ).json()["items"][0]
+    ).json()["items"]:
+        if device["id"] == device_id:
+            return device
 
 
 def create_user(userdata):
