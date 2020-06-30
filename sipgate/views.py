@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.contrib.auth import login as auth_login
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.models import User
@@ -59,13 +58,6 @@ oauth.register(
     api_base_url="https://api.sipgate.com/v2",
     client_kwargs={"scope": "all"},
 )
-
-
-def forbidden(msg):
-    response = HttpResponse()
-    response.write("<h1>" + msg + "</h1>")
-    response.status_code = 403
-    return response
 
 
 def home(request):
