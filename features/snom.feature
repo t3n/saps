@@ -14,3 +14,18 @@ Feature: Fixture loading
     Scenario: MAC address is correct
         When I visit "/snom320-0004132C0AD4.htm"
         Then I should see "0004132C0AD4"
+
+    Scenario: General is valid
+        When I visit "/snom320/general.xml"
+        Then I should see "<phone-settings>"
+        Then Content type is "application/xml"
+
+    Scenario: Firmware is valid
+        When I visit "/snom320/firmware.xml"
+        Then I should see "<firmware-settings>"
+        Then Content type is "application/xml"
+
+    Scenario: Language is valid
+        When I visit "/snom320/general.xml"
+        Then I should see "<setting_server perm"
+        Then Content type is "application/xml"
