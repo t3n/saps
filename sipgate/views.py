@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.contrib.auth import login as auth_login
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.models import User
@@ -7,84 +6,25 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test,
 )
-from authlib.integrations.django_client import OAuth
 from authlib.common.errors import AuthlibBaseError
 
+from snom.models import Phone
 from .forms import AssignForm
 from .models import OAuth2Token
-from snom.models import Phone
-
-
-def fetch_token(name, request):
-    token = OAuth2Token.objects.get(name=name, user=request.user)
-
-    return token.to_token()
-
-
-def update_token(name, token, refresh_token=None, access_token=None):
-    if refresh_token:
-        item = OAuth2Token.objects.get(name=name, refresh_token=refresh_token)
-    elif access_token:
-        item = OAuth2Token.objects.get(name=name, access_token=access_token)
-    else:
-        return
-
-    # update old token
-    item.access_token = token["access_token"]
-    item.refresh_token = token.get("refresh_token")
-    item.expires_at = token["expires_at"]
-    item.save()
-
-    # Check if user is Staff
-    userinfo = oauth.sipgate.get(
-        "https://api.sipgate.com/v2/authorization/userinfo", token=token
-    ).json()
-    userdata = oauth.sipgate.get(
-        "https://api.sipgate.com/v2/users/" + userinfo["sub"], token=token
-    ).json()
-    User.objects.filter(email=item.user).update(is_staff=userdata["admin"])
-
-
-oauth = OAuth(fetch_token=fetch_token, update_token=update_token)
-oauth.register(
-    name="sipgate",
-    access_token_url=(
-        "https://login.sipgate.com"
-        "/auth/realms/third-party/protocol/openid-connect/token"
-    ),
-    authorize_url=(
-        "https://login.sipgate.com"
-        "/auth/realms/third-party/protocol/openid-connect/auth"
-    ),
-    api_base_url="https://api.sipgate.com/v2",
-    client_kwargs={"scope": "all"},
-)
-
-
-def forbidden(msg):
-    response = HttpResponse()
-    response.write("<h1>" + msg + "</h1>")
-    response.status_code = 403
-    return response
+from .utils import get_credentials, oauth, create_user
 
 
 def home(request):
     if request.user.is_authenticated is not True:
-        return redirect("/login")
+        return redirect("sipgate:login")
     else:
-        return redirect("/me")
-
-
-def get_credentials(request, user_id):
-    return oauth.sipgate.get(
-        "https://api.sipgate.com/v2/" + user_id + "/devices", request=request
-    ).json()["items"][0]
+        return redirect("sipgate:me")
 
 
 @user_passes_test(lambda u: u.is_staff, login_url="login")
 def assign(request):
     if request.user.is_authenticated is not True:
-        return redirect("/login")
+        return redirect("sipgate:login")
     if request.user.is_staff is not True:
         return "Not Staff"
 
@@ -96,19 +36,25 @@ def assign(request):
 
     form = AssignForm(request.POST or None, choices=users)
     if form.is_valid():
-        credentials = get_credentials(request, form.cleaned_data["user"])
+        credentials = get_credentials(
+            request, form.cleaned_data["user"], form.cleaned_data["device"]
+        )
         userdata = oauth.sipgate.get(
             "https://api.sipgate.com/v2/users/" + form.cleaned_data["user"],
             request=request,
         ).json()
+        user = User.objects.filter(email=userdata["email"]).first()
+        if not user:
+            user = create_user(userdata)
         Phone.objects.filter(pk=form.cleaned_data["phone"].id).update(
             user=User.objects.filter(email=userdata["email"]).first(),
+            device=form.cleaned_data["device"],
             username=credentials["credentials"]["username"],
             password=credentials["credentials"]["password"],
             realname=credentials["alias"],
             host=credentials["credentials"]["sipServer"],
         )
-        return redirect("assign")
+        return redirect("sipgate:assign")
     else:
         form = AssignForm(choices=users)
 
@@ -124,7 +70,7 @@ def device(request, user_id):
 
 
 def login(request):
-    redirect_uri = request.build_absolute_uri(reverse("authorize"))
+    redirect_uri = request.build_absolute_uri(reverse("sipgate:authorize"))
     return oauth.sipgate.authorize_redirect(request, redirect_uri)
 
 
@@ -132,7 +78,7 @@ def authorize(request):
     try:
         token = oauth.sipgate.authorize_access_token(request)
     except AuthlibBaseError:
-        return redirect("login")
+        return redirect("sipgate:login")
     userinfo = oauth.sipgate.get(
         "https://api.sipgate.com/v2/authorization/userinfo", token=token
     ).json()
@@ -142,13 +88,7 @@ def authorize(request):
 
     user = User.objects.filter(email=userdata["email"]).first()
     if not user:
-        user = User.objects.create_user(
-            username=userdata["email"],
-            email=userdata["email"],
-            first_name=userdata["firstname"],
-            last_name=userdata["lastname"],
-            is_staff=userdata["admin"],
-        )
+        user = create_user(userdata)
 
     sipgate_token = OAuth2Token.objects.filter(name="sipgate", user=user).first()
     if not sipgate_token:
@@ -164,7 +104,7 @@ def authorize(request):
 
     auth_login(request, user)
 
-    return redirect("me")
+    return redirect("sipgate:me")
 
 
 @login_required(login_url="login")
@@ -174,12 +114,12 @@ def me(request):
             "https://api.sipgate.com/v2/authorization/userinfo", request=request
         ).json()
     except (ObjectDoesNotExist, TypeError):
-        return redirect("login")
+        return redirect("sipgate:login")
     userdata = oauth.sipgate.get(
         "https://api.sipgate.com/v2/users/" + userinfo["sub"], request=request
     ).json()
 
-    response = HttpResponse()
-    response.write("<h1>Hello " + userdata["email"] + "</h1>" + userdata["id"])
+    devices = Phone.objects.filter(user__email=userdata["email"])
+    context = {"userdata": userdata, "devices": devices}
 
-    return response
+    return render(request, "me.html", context)

@@ -1,0 +1,13 @@
+{% include "navbar.html" %}
+  <div class="container">
+    <section>
+      <h1>{{ userdata.firstname }} {{ userdata.lastname }}</h1>
+      <p>{{ userdata.id }}</p>
+      <h2>Telefone</h2>
+      <p>
+        {% for device in devices %}
+        <a href="{% url 'snom:function_keys' device.device %}">{{ device.device }}</a>
+        {% endfor %}
+      </p>
+    </section>
+  </div>

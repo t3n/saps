@@ -9,21 +9,20 @@ from .models import (
     Language,
     Phone,
     PhoneType,
-    FunctionKey,
 )
-from .utils import mac_address_valid, phone_type_valid
+from .utils import mac_address_valid, phone_type_valid, get_function_keys, save_fkey
 from .forms import FunctionKeyForm
 
 
 @login_required(login_url="login")
-def function_keys(request):
+def function_keys(request, device_id):
     try:
-        phone = Phone.objects.filter(user=request.user).first()
+        phone = Phone.objects.filter(user=request.user, device=device_id).first()
     except ObjectDoesNotExist:
-        return redirect("assign")
+        return redirect("sipgate:assign")
 
     if phone is None:
-        return redirect("assign")
+        return redirect("sipgate:assign")
 
     fkeys = get_function_keys(phone)
 
@@ -31,45 +30,11 @@ def function_keys(request):
     if form.is_valid():
         for (fkey, function) in form.function_keys():
             save_fkey(phone, fkey, function)
-        return redirect("function_keys")
+        return redirect("snom:function_keys", device_id)
     else:
         form = FunctionKeyForm(fkeys=fkeys)
 
     return render(request, "fkeys.html", {"form": form})
-
-
-def get_function_keys(phone):
-    fkey_count = PhoneType.objects.get(phone_type=phone.phone_type).function_keys
-    fkeys = list(FunctionKey.objects.filter(phone=phone).order_by("fkey"))
-
-    fkey_range = list(range(1, fkey_count + 1))
-    for fkey in fkeys:
-        fkey_range.remove(fkey.fkey)
-
-    for i in fkey_range:
-        fkeys.insert(i - 1, FunctionKey(phone=phone, fkey=i))
-
-    return fkeys
-
-
-def save_fkey(phone, fkey, function):
-    if function:
-        try:
-            f = FunctionKey.objects.get(phone=phone, fkey=fkey)
-        except ObjectDoesNotExist:
-            f = FunctionKey()
-
-        f.phone = phone
-        f.fkey = fkey
-        f.function = function
-        f.save()
-    else:
-        try:
-            f = FunctionKey.objects.get(phone=phone, fkey=fkey)
-        except ObjectDoesNotExist:
-            pass
-        else:
-            f.delete()
 
 
 def phone_type(request, phone_type):

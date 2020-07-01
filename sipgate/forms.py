@@ -9,6 +9,9 @@ class AssignForm(forms.Form):
         super(AssignForm, self).__init__(*args, **kwargs)
         self.fields["user"].choices = choices
 
+        if "device" in self.data:
+            self.fields["device"].choices = [(self.data["device"], "")]
+
     phone = forms.ModelChoiceField(queryset=Phone.objects.all())
     user = forms.ChoiceField(choices=())
     device = forms.ChoiceField()

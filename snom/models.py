@@ -6,6 +6,7 @@ class Phone(models.Model):
     phone_type = models.ForeignKey("PhoneType", on_delete=models.CASCADE)
     mac_address = models.CharField(max_length=20, unique=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    device = models.CharField(max_length=20, null=True, blank=True)
     username = models.CharField(max_length=200, null=True, blank=True)
     password = models.CharField(max_length=200, null=True, blank=True)
     realname = models.CharField(max_length=200, null=True, blank=True)

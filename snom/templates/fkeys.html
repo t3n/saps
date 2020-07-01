@@ -3,14 +3,16 @@
     <section>
       <h1>Funktionstasten festlegen</h1>
       <div class="row">
-        <div class="input-group mb-3">  
-          <div class="input-group-prepend">     
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
             <form action="" method="post" novalidate>
               {% csrf_token %}
-              {{ form.as_p }}
+              <table>
+                {{ form.as_table }}
+              </table>
               <input class="btn btn-primary" type="submit" value="Submit">
             </form>
           </div>
         </div>
-    </div>
+    </section>
   </div>
