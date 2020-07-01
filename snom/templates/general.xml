@@ -29,7 +29,7 @@
 
   <!-- the following parameters are only required to provide automated firmware updates--> 
   <!-- IMPORTANT: define the URL of the firmware setting file--> 
-  <firmware_status perm="R">http://{{ server }}{% url 'firmware' phone_type %}</firmware_status>
+  <firmware_status perm="R">http://{{ server }}{% url 'snom:firmware' phone_type %}</firmware_status>
   <update_policy perm="R">auto_update</update_policy>
   <firmware_interval perm="R">2880 </firmware_interval>
  </phone-settings>
