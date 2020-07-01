@@ -1,0 +1,14 @@
+- model: snom.firmware
+  pk: 1
+  fields:
+    phone_type: 2
+    host: http://downloads.snom.com
+    path: /fw/
+    filename: snom320-8.7.5.35-SIP-f.bin
+- model: snom.firmware
+  pk: 2
+  fields:
+    phone_type: 8
+    host: http://downloads.snom.com
+    path: /fw/10.1.54.13/bin/
+    filename: snomD375-10.1.54.13-SIP-r.bin

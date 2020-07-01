@@ -1,0 +1,7 @@
+- model: snom.language
+  pk: 1
+  fields:
+    phone_type: 2
+    host: http://downloads.snom.com
+    path: /config/snomlang-8.7.5/
+    filename: web_lang_DE.xml

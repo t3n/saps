@@ -22,6 +22,12 @@ Alpha, everything is subject to change.
 
 ## Install
 
+```bash
+$ python manage.py loaddata phonetype
+$ python manage.py loaddata firmware
+$ python manage.py loaddata language
+```
+
 ## Usage
 
 ## Contributing
