@@ -2,13 +2,15 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
-from django.db.models import ObjectDoesNotExist
+from django.db.models import ObjectDoesNotExist, Q
 
 from .models import (
     Firmware,
+    FunctionKey,
     Language,
     Phone,
     PhoneType,
+    Setting,
 )
 from .utils import mac_address_valid, phone_type_valid, get_function_keys, save_fkey
 from .forms import FunctionKeyForm
@@ -16,6 +18,7 @@ from .forms import FunctionKeyForm
 
 @login_required(login_url="login")
 def function_keys(request, device_id):
+    phone = None
     try:
         phone = Phone.objects.filter(user=request.user, device=device_id).first()
     except ObjectDoesNotExist:
@@ -81,10 +84,28 @@ def general(request, phone_type):
     except ObjectDoesNotExist:
         language = None
 
+    try:
+        firmware = Firmware.objects.get(phone_type__phone_type=phone_type)
+    except ObjectDoesNotExist:
+        firmware = None
+
+    settings = Setting.objects.filter(
+        Q(phone=None, phone_type=None)
+        | Q(phone=None, phone_type__phone_type=phone_type)
+    ).exclude(Q(key="update_policy") | Q(key="firmware_interval"))
+
+    if firmware:
+        firmware = Setting.objects.filter(
+            Q(phone=None, phone_type=None)
+            | Q(phone=None, phone_type__phone_type=phone_type)
+        ).filter(Q(key="update_policy") | Q(key="firmware_interval"))
+
     context = {
         "server": get_current_site(request).domain,
         "phone_type": phone_type,
+        "firmware": firmware,
         "language": language,
+        "settings": settings,
     }
 
     if not phone_type_valid(phone_type):
@@ -95,6 +116,14 @@ def general(request, phone_type):
 
 def specific(request, phone_type, mac_address):
     phone = get_object_or_404(Phone, mac_address=mac_address)
+    try:
+        function_keys = FunctionKey.objects.filter(phone=phone.id).all()
+    except ObjectDoesNotExist:
+        function_keys = None
+
+    settings = Setting.objects.filter(Q(phone=phone, phone_type=None)).exclude(
+        Q(key="update_policy") | Q(key="firmware_interval")
+    )
 
     context = {
         "server": get_current_site(request).domain,
@@ -102,6 +131,8 @@ def specific(request, phone_type, mac_address):
         "user_name": phone.username,
         "user_host": phone.host,
         "user_pass": phone.password,
+        "settings": settings,
+        "function_keys": function_keys,
     }
 
     return render(request, "specific.xml", context, "application/xml")

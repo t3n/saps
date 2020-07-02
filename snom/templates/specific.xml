@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
- <phone-settings>
-  <user_realname idx="1" perm="">{{ user_realname }}</user_realname>
-  <user_name idx="1" perm="">{{ user_name }}</user_name>
-  <user_host idx="1" perm="">{{ user_host }}</user_host>
-  <user_pname idx="1" perm="">{{ user_name }}</user_pname>
-  <user_pass idx="1" perm="">{{ user_pass }}</user_pass>
-  <user_outbound idx="1" perm="">{{ user_host }}</user_outbound>
-  <user_was_registered idx="1" perm="">true</user_was_registered>
- </phone-settings>
+  <phone-settings>{% if settings %}{% for setting in settings %}
+    <{{ setting.key }} perm="{{ setting.perm }}">{{ setting.value }}</{{ setting.key }}>{% endfor %}{% endif %}
+    <user_realname idx="1" perm="">{{ user_realname }}</user_realname>
+    <user_name idx="1" perm="">{{ user_name }}</user_name>
+    <user_host idx="1" perm="">{{ user_host }}</user_host>
+    <user_pname idx="1" perm="">{{ user_name }}</user_pname>
+    <user_pass idx="1" perm="">{{ user_pass }}</user_pass>
+    <user_outbound idx="1" perm="">{{ user_host }}</user_outbound>
+    <user_was_registered idx="1" perm="">true</user_was_registered>
+  </phone-settings>{% if function_keys %}
+  <functionKeys e="2">{% for fkey in function_keys %}
+    <fkey idx="{{ fkey.fkey|add:'-1' }}" context="active" icon_type="" reg_label_mode="icon_text" label="" lp="on" perm="">{{ fkey.kind }}{{ " "|add:fkey.number }}</fkey>{% endfor %}
+  </functionKeys>{% endif %}
 </settings>

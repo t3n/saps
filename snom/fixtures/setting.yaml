@@ -1,0 +1,216 @@
+- model: snom.setting
+  pk: 2
+  fields:
+    phone_type: null
+    phone: null
+    key: ntp_server
+    value: de.pool.ntp.org
+    perm: ''
+- model: snom.setting
+  pk: 4
+  fields:
+    phone_type: null
+    phone: null
+    key: language
+    value: Deutsch
+    perm: ''
+- model: snom.setting
+  pk: 5
+  fields:
+    phone_type: null
+    phone: null
+    key: timezone
+    value: GER+1
+    perm: ''
+- model: snom.setting
+  pk: 6
+  fields:
+    phone_type: null
+    phone: null
+    key: tone_scheme
+    value: GER
+    perm: ''
+- model: snom.setting
+  pk: 7
+  fields:
+    phone_type: null
+    phone: null
+    key: http_user
+    value: admin
+    perm: ''
+- model: snom.setting
+  pk: 8
+  fields:
+    phone_type: null
+    phone: null
+    key: http_pass
+    value: '0000'
+    perm: ''
+- model: snom.setting
+  pk: 9
+  fields:
+    phone_type: null
+    phone: null
+    key: date_us_format
+    value: 'off'
+    perm: ''
+- model: snom.setting
+  pk: 10
+  fields:
+    phone_type: null
+    phone: null
+    key: web_language
+    value: Deutsch
+    perm: ''
+- model: snom.setting
+  pk: 11
+  fields:
+    phone_type: null
+    phone: null
+    key: ignore_security_warning
+    value: 'on'
+    perm: ''
+- model: snom.setting
+  pk: 12
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_record
+    value: dtmf *6
+    perm: ''
+- model: snom.setting
+  pk: 13
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_retrieve
+    value: speed 55000
+    perm: ''
+- model: snom.setting
+  pk: 14
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_redail
+    value: keyevent F_REDIAL
+    perm: ''
+- model: snom.setting
+  pk: 15
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_directory
+    value: keyevent F_ADR_BOOK
+    perm: ''
+- model: snom.setting
+  pk: 16
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_menu
+    value: keyevent F_SETTINGS
+    perm: ''
+- model: snom.setting
+  pk: 17
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_conf
+    value: dtmf *5
+    perm: ''
+- model: snom.setting
+  pk: 18
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_hold
+    value: dtmf *3
+    perm: ''
+- model: snom.setting
+  pk: 19
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_settings
+    value: keyevent F_SETTINGS
+    perm: ''
+- model: snom.setting
+  pk: 20
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_help
+    value: keyevent F_SUPPORT
+    perm: ''
+- model: snom.setting
+  pk: 21
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_snom
+    value: keyevent none
+    perm: ''
+- model: snom.setting
+  pk: 22
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_transfer
+    value: 'dtmf #'
+    perm: ''
+- model: snom.setting
+  pk: 23
+  fields:
+    phone_type: null
+    phone: null
+    key: dkey_dnd
+    value: keyevent F_DND
+    perm: ''
+- model: snom.setting
+  pk: 24
+  fields:
+    phone_type: null
+    phone: null
+    key: gui_fkey1
+    value: keyevent F_REDIRECT
+    perm: ''
+- model: snom.setting
+  pk: 25
+  fields:
+    phone_type: null
+    phone: null
+    key: gui_fkey2
+    value: keyevent F_CALL_LIST
+    perm: ''
+- model: snom.setting
+  pk: 26
+  fields:
+    phone_type: null
+    phone: null
+    key: gui_fkey3
+    value: keyevent F_ADR_BOOK
+    perm: ''
+- model: snom.setting
+  pk: 27
+  fields:
+    phone_type: null
+    phone: null
+    key: gui_fkey4
+    value: keyevent F_RETRIEVE
+    perm: ''
+- model: snom.setting
+  pk: 28
+  fields:
+    phone_type: null
+    phone: null
+    key: update_policy
+    value: auto_update
+    perm: R
+- model: snom.setting
+  pk: 29
+  fields:
+    phone_type: null
+    phone: null
+    key: firmware_interval
+    value: '2880'
+    perm: R

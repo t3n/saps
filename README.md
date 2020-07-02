@@ -28,6 +28,8 @@ $ python manage.py loaddata firmware
 $ python manage.py loaddata language
 ```
 
+Set Sites domain name.
+
 ## Usage
 
 ## Contributing
