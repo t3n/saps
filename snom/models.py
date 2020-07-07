@@ -2,6 +2,36 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+KIND_CHOICES = [
+    ("url", "Action URL"),
+    ("auto_answer", "Auto Answer"),
+    ("blf", "BLF"),
+    ("button", "Button"),
+    ("call_center_status", "Call Center Status"),
+    ("redirect", "Call Forward"),
+    ("cancel", "Cancel"),
+    ("conference", "Conference"),
+    ("F_DISP_CODE", "Disposition Code"),
+    ("dtmf", "DTMF"),
+    ("dest", "Extension"),
+    ("icom", "Intercom"),
+    ("ivr", "IVR"),
+    ("keyevent", "Key Event"),
+    ("line", "Line"),
+    ("multicast", "Multicast"),
+    ("ok", "OK"),
+    ("orbit", "Park"),
+    ("presence", "Presence"),
+    ("p2t", "Push-to-Talk"),
+    ("recorder", "Record"),
+    ("smart_transfer", "SmartTransfer"),
+    ("speed", "Speed Dial"),
+    ("transfer", "Transfer"),
+    ("xml", "XML Definition"),
+    ("none", "None"),
+]
+
+
 class Phone(models.Model):
     phone_type = models.ForeignKey("PhoneType", on_delete=models.CASCADE)
     mac_address = models.CharField(max_length=20, unique=True)
@@ -27,37 +57,11 @@ class Firmware(models.Model):
 
 
 class FunctionKey(models.Model):
-    KIND_CHOICES = [
-        ("url", "Action URL"),
-        ("auto_answer", "Auto Answer"),
-        ("blf", "BLF"),
-        ("button", "Button"),
-        ("call_center_status", "Call Center Status"),
-        ("redirect", "Call Forward"),
-        ("cancel", "Cancel"),
-        ("conference", "Conference"),
-        ("F_DISP_CODE", "Disposition Code"),
-        ("dtmf", "DTMF"),
-        ("dest", "Extension"),
-        ("icom", "Intercom"),
-        ("ivr", "IVR"),
-        ("keyevent", "Key Event"),
-        ("line", "Line"),
-        ("multicast", "Multicast"),
-        ("ok", "OK"),
-        ("orbit", "Park"),
-        ("presence", "Presence"),
-        ("p2t", "Push-to-Talk"),
-        ("recorder", "Record"),
-        ("smart_transfer", "SmartTransfer"),
-        ("speed", "Speed Dial"),
-        ("transfer", "Transfer"),
-        ("xml", "XML Definition"),
-        ("none", "None"),
-    ]
     phone = models.ForeignKey("Phone", on_delete=models.CASCADE)
     fkey = models.IntegerField()
-    kind = models.CharField(max_length=20, choices=KIND_CHOICES, default="speed")
+    kind = models.CharField(
+        max_length=20, choices=KIND_CHOICES, default="", null=True, blank=True
+    )
     number = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
