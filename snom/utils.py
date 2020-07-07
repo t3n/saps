@@ -33,8 +33,8 @@ def get_function_keys(phone):
     return fkeys
 
 
-def save_fkey(phone, fkey, function):
-    if function:
+def save_fkey(phone, fkey, kind, number):
+    if kind:
         try:
             f = FunctionKey.objects.get(phone=phone, fkey=fkey)
         except ObjectDoesNotExist:
@@ -42,7 +42,8 @@ def save_fkey(phone, fkey, function):
 
         f.phone = phone
         f.fkey = fkey
-        f.function = function
+        f.kind = kind
+        f.number = number
         f.save()
     else:
         try:
