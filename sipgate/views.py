@@ -123,7 +123,7 @@ def me(request):
         "https://api.sipgate.com/v2/users/" + userinfo["sub"], request=request
     ).json()
 
-    devices = Phone.objects.filter(user__email=userdata["email"])
-    context = {"userdata": userdata, "devices": devices}
+    phones = Phone.objects.filter(user__email=userdata["email"])
+    context = {"userdata": userdata, "phones": phones}
 
     return render(request, "me.html", context)
