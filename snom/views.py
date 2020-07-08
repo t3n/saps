@@ -17,10 +17,10 @@ from .forms import FunctionKeyForm
 
 
 @login_required(login_url="login")
-def function_keys(request, device_id):
+def function_keys(request, phone_id):
     phone = None
     try:
-        phone = Phone.objects.filter(user=request.user, device=device_id).first()
+        phone = Phone.objects.filter(user=request.user, pk=phone_id).first()
     except ObjectDoesNotExist:
         return redirect("sipgate:assign")
 
@@ -33,7 +33,7 @@ def function_keys(request, device_id):
     if form.is_valid():
         for (fkey, kind, number) in form.function_keys():
             save_fkey(phone, fkey, kind, number)
-        return redirect("snom:function_keys", device_id)
+        return redirect("snom:function_keys", phone_id)
     else:
         form = FunctionKeyForm(fkeys=fkeys)
 

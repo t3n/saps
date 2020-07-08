@@ -3,11 +3,13 @@
     <section>
       <h1>{{ userdata.firstname }} {{ userdata.lastname }}</h1>
       <p>{{ userdata.id }}</p>
+      {% if phones %}
       <h2>Telefone</h2>
       <p>
-        {% for device in devices %}
-        <a href="{% url 'snom:function_keys' device.device %}">{{ device.device }}</a>
+        {% for phone in phones %}
+        <p><a href="{% url 'snom:function_keys' phone.pk %}">{{ phone }}</a></p>
         {% endfor %}
       </p>
+      {% endif %}
     </section>
   </div>
