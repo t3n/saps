@@ -26,6 +26,7 @@ Alpha, everything is subject to change.
 $ python manage.py loaddata phonetype
 $ python manage.py loaddata firmware
 $ python manage.py loaddata language
+$ python manage.py loaddata setting
 ```
 
 Set Sites domain name.

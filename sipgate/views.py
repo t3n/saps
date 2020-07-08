@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import (
     user_passes_test,
 )
 from authlib.common.errors import AuthlibBaseError
+from authlib.integrations.base_client.errors import OAuthError
 
 from snom.models import Phone
 from .forms import AssignForm
@@ -113,6 +114,9 @@ def me(request):
         userinfo = oauth.sipgate.get(
             "https://api.sipgate.com/v2/authorization/userinfo", request=request
         ).json()
+    except OAuthError:
+        OAuth2Token.objects.filter(name="sipgate", user=request.user).delete()
+        return redirect("sipgate:login")
     except (ObjectDoesNotExist, TypeError):
         return redirect("sipgate:login")
     userdata = oauth.sipgate.get(
