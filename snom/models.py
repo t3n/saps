@@ -136,7 +136,7 @@ class Setting(models.Model):
         except models.ObjectDoesNotExist:
             if self.phone is not None and self.phone_type is not None:
                 raise ValidationError(
-                    {NON_FIELD_ERRORS: ["Choose phone type or phone not both."]}
+                    {NON_FIELD_ERRORS: ["Choose phone type or phone, but not both."]}
                 )
 
     def kind(self):
