@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 
 
 KIND_CHOICES = [
@@ -55,6 +56,9 @@ class Firmware(models.Model):
     def __str__(self):
         return self.phone_type.phone_type + "-" + self.host + self.path + self.filename
 
+    def url(self):
+        return self.host + self.path + self.filename
+
 
 class FunctionKey(models.Model):
     phone = models.ForeignKey("Phone", on_delete=models.CASCADE)
@@ -65,10 +69,9 @@ class FunctionKey(models.Model):
     number = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
-        unique_together = (
-            "phone",
-            "fkey",
-        )
+        constraints = [
+            models.UniqueConstraint(fields=["phone", "fkey"], name="unique_fkey")
+        ]
 
     def __str__(self):
         return (
@@ -88,6 +91,9 @@ class Language(models.Model):
 
     def __str__(self):
         return self.phone_type.phone_type + "-" + self.host + self.path + self.filename
+
+    def url(self):
+        return self.host + self.path + self.filename
 
 
 class PhoneType(models.Model):
@@ -112,11 +118,35 @@ class Setting(models.Model):
     value = models.CharField(max_length=200)
     perm = models.CharField(max_length=2, choices=PERM_CHOICES, default="", blank=True)
 
-    def __str__(self):
-        kind = "general-"
-        if self.phone_type:
-            kind = self.phone_type.phone_type + "-"
-        if self.phone:
-            kind = self.phone.mac_address + "-"
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["phone_type", "phone", "key"], name="unique_setting"
+            )
+        ]
 
-        return kind + self.key + "-" + self.value
+    def validate_unique(self, exclude=None):
+        super().validate_unique(exclude=exclude)
+        try:
+            setting = Setting.objects.get(
+                phone_type=self.phone_type, phone=self.phone, key=self.key,
+            )
+            if setting and not setting.pk == self.pk:
+                raise ValidationError({NON_FIELD_ERRORS: ["Setting already exists."]})
+        except models.ObjectDoesNotExist:
+            if self.phone is not None and self.phone_type is not None:
+                raise ValidationError(
+                    {NON_FIELD_ERRORS: ["Choose phone type or phone not both."]}
+                )
+
+    def kind(self):
+        kind = "general"
+        if self.phone_type:
+            kind = self.phone_type.phone_type
+        if self.phone:
+            kind = self.phone.mac_address
+
+        return kind
+
+    def __str__(self):
+        return self.kind() + "-" + self.key + "-" + self.value
