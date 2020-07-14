@@ -41,9 +41,15 @@ def function_keys(request, phone_id):
 
 
 def phone_type(request, phone_type):
+    try:
+        language = Language.objects.get(phone_type__phone_type=phone_type)
+    except ObjectDoesNotExist:
+        language = None
+
     context = {
         "server": get_current_site(request).domain,
         "phone_type": phone_type,
+        "language": language,
     }
 
     if not phone_type_valid(phone_type):
@@ -80,11 +86,6 @@ def phone(request, phone_type, mac_address):
 
 def general(request, phone_type):
     try:
-        language = Language.objects.get(phone_type__phone_type=phone_type)
-    except ObjectDoesNotExist:
-        language = None
-
-    try:
         firmware = Firmware.objects.get(phone_type__phone_type=phone_type)
     except ObjectDoesNotExist:
         firmware = None
@@ -104,7 +105,6 @@ def general(request, phone_type):
         "server": get_current_site(request).domain,
         "phone_type": phone_type,
         "firmware": firmware,
-        "language": language,
         "settings": settings,
     }
 

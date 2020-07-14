@@ -48,7 +48,7 @@ class Phone(models.Model):
 
 
 class Firmware(models.Model):
-    phone_type = models.ForeignKey("PhoneType", on_delete=models.CASCADE)
+    phone_type = models.OneToOneField("PhoneType", on_delete=models.CASCADE)
     host = models.CharField(max_length=200)
     path = models.CharField(max_length=200)
     filename = models.CharField(max_length=200)
@@ -84,7 +84,7 @@ class FunctionKey(models.Model):
 
 
 class Language(models.Model):
-    phone_type = models.ForeignKey("PhoneType", on_delete=models.CASCADE)
+    phone_type = models.OneToOneField("PhoneType", on_delete=models.CASCADE)
     host = models.CharField(max_length=200)
     path = models.CharField(max_length=200)
     filename = models.CharField(max_length=200)

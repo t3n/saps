@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
- <firmware-settings>
+<firmware-settings>
   <firmware perm="">{{ firmware.url }}</firmware>
- </firmware-settings>
+</firmware-settings>
