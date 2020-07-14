@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
   <phone-settings>{% if language %}
-    <setting_server perm="RW">{{ language }}</setting_server>{% endif %}{% if settings %}{% for setting in settings %}
+    <setting_server perm="RW">{{ language.url }}</setting_server>{% endif %}{% if settings %}{% for setting in settings %}
     <{{ setting.key }} perm="{{ setting.perm }}">{{ setting.value }}</{{ setting.key }}>{% endfor %}{% endif %}{% if firmware %}
     <!-- the following parameters are only required to provide automated firmware updates-->
     <!-- IMPORTANT: define the URL of the firmware setting file-->
