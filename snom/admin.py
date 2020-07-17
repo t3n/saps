@@ -42,10 +42,11 @@ class FirmwareAdmin(admin.ModelAdmin):
 
 @admin.register(Phone)
 class PhoneAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "user")
+    list_display = ("__str__", "user", "last_seen", "last_ip")
     list_filter = (AssignListFilter,)
     fieldsets = (
         ("Phone", {"fields": ["phone_type", "mac_address", "user"]}),
+        ("Last seen", {"fields": ["last_seen", "last_ip"]}),
         (
             "Sipgate",
             {

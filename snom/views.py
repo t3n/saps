@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from django.db.models import ObjectDoesNotExist, Q
+from django.utils.timezone import now
 
 from .models import (
     Firmware,
@@ -12,7 +13,13 @@ from .models import (
     PhoneType,
     Setting,
 )
-from .utils import mac_address_valid, phone_type_valid, get_function_keys, save_fkey
+from .utils import (
+    mac_address_valid,
+    phone_type_valid,
+    get_function_keys,
+    save_fkey,
+    get_client_ip,
+)
 from .forms import FunctionKeyForm
 
 
@@ -77,9 +84,15 @@ def phone(request, phone_type, mac_address):
         phone = Phone(
             phone_type=PhoneType.objects.get(phone_type=phone_type),
             mac_address=mac_address,
+            last_seen=now(),
+            last_ip=get_client_ip(request),
         )
         phone.save()
         status = 201
+    else:
+        Phone.objects.filter(mac_address=mac_address).update(
+            last_seen=now(), last_ip=get_client_ip(request)
+        )
 
     return render(request, "phone.xml", context, status=status)
 

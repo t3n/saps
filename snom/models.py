@@ -42,6 +42,8 @@ class Phone(models.Model):
     password = models.CharField(max_length=200, null=True, blank=True)
     realname = models.CharField(max_length=200, null=True, blank=True)
     host = models.CharField(max_length=200, null=True, blank=True)
+    last_seen = models.DateTimeField()
+    last_ip = models.GenericIPAddressField(unpack_ipv4=True)
 
     def __str__(self):
         return self.phone_type.phone_type + "-" + self.mac_address
