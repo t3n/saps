@@ -47,7 +47,7 @@ oauth.register(
         "/auth/realms/third-party/protocol/openid-connect/auth"
     ),
     api_base_url="https://api.sipgate.com/v2",
-    client_kwargs={"scope": "all"},
+    client_kwargs={"scope": "devices:read users:read"},
 )
 
 
