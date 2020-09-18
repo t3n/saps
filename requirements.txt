@@ -1,5 +1,5 @@
 Django==3.0.8
-django-authlib==0.9.5
+django-authlib==0.9.7
 django-environ==0.4.5
 behave-django==1.4.0
 Authlib==0.14.3
