@@ -6,4 +6,4 @@ Authlib==0.15.3
 uwsgi>=2.0.18
 psycopg2-binary==2.8.6
 PyYAML==5.4.1
-cryptography==3.4.6
+cryptography==37.0.0
